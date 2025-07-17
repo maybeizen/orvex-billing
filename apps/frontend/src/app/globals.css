@@ -10,9 +10,25 @@
 @layer base {
   html {
     font-family: var(--font-sans);
+    scroll-behavior: smooth;
   }
   body {
     @apply antialiased bg-black text-white;
+    background-image: radial-gradient(
+        circle at 20% 80%,
+        rgba(120, 119, 198, 0.03) 0%,
+        transparent 50%
+      ),
+      radial-gradient(
+        circle at 80% 20%,
+        rgba(255, 255, 255, 0.01) 0%,
+        transparent 50%
+      ),
+      radial-gradient(
+        circle at 40% 40%,
+        rgba(120, 119, 198, 0.02) 0%,
+        transparent 50%
+      );
   }
   h1,
   h2,
@@ -31,8 +47,43 @@
 }
 
 .glass-effect {
-  background: rgba(36, 36, 48, 0.7);
-  backdrop-filter: blur(8px) saturate(1.2);
-  border: 1px solid rgba(120, 119, 198, 0.12);
-  box-shadow: 0 4px 32px 0 rgba(80, 80, 120, 0.12);
+  background: rgba(36, 36, 48, 0.4);
+  backdrop-filter: blur(20px) saturate(1.8);
+  border: 1px solid rgba(120, 119, 198, 0.15);
+  box-shadow: 0 8px 32px 0 rgba(80, 80, 120, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.animate-spin-clean {
+  animation: spin 1s linear infinite;
+  will-change: transform;
+  transform-origin: center;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(139, 92, 246, 0.5);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(139, 92, 246, 0.8);
+}
+
+input:focus,
+textarea:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.3);
+}
+
+::selection {
+  background: rgba(139, 92, 246, 0.3);
+  color: white;
 }

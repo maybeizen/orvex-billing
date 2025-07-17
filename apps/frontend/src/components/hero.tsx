@@ -54,7 +54,7 @@ const Hero: React.FC = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-3xl mx-auto">
           <div className="flex items-center justify-center p-4 bg-white/5 rounded-xl border border-white/10">
-            <i className="fas fa-shield-alt text-green-400 mr-3" />
+            <i className="fas fa-shield-alt text-2xl text-green-400 mr-3" />
             <div className="text-left">
               <div className="text-lg font-bold">99.9%</div>
               <div className="text-gray-400 text-sm">Uptime</div>
@@ -62,7 +62,7 @@ const Hero: React.FC = () => {
           </div>
 
           <div className="flex items-center justify-center p-4 bg-white/5 rounded-xl border border-white/10">
-            <i className="fas fa-clock text-blue-400 mr-3" />
+            <i className="fas fa-clock text-2xl text-blue-400 mr-3" />
             <div className="text-left">
               <div className="text-lg font-bold">5 Min</div>
               <div className="text-gray-400 text-sm">Setup</div>
@@ -70,7 +70,7 @@ const Hero: React.FC = () => {
           </div>
 
           <div className="flex items-center justify-center p-4 bg-white/5 rounded-xl border border-white/10">
-            <i className="fas fa-bolt text-purple-400 mr-3" />
+            <i className="fas fa-bolt text-2xl text-purple-400 mr-3" />
             <div className="text-left">
               <div className="text-lg font-bold">24/7</div>
               <div className="text-gray-400 text-sm">Support</div>
