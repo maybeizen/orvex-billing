@@ -28,6 +28,7 @@ func RegisterRoutes(app *fiber.App) {
 	authGroup.Post("/register", auth.Register)
 	authGroup.Post("/logout", middleware.RequireAuth, auth.Logout)
 	authGroup.Post("/logout-all", middleware.RequireAuth, auth.LogoutAll)
+	authGroup.Post("/2fa/verify", middleware.RequireAuth, auth.Verify2FA)
 
 	protected := v1.Group("/", middleware.RequireAuth)
 	
@@ -49,9 +50,12 @@ func RegisterRoutes(app *fiber.App) {
 	userGroup.Put("/privacy", user.UpdatePrivacySettings)
 	
 	// Two-factor authentication
+	userGroup.Post("/2fa/setup", auth.Setup2FA)
 	userGroup.Post("/2fa/enable", auth.Enable2FA)
-	userGroup.Post("/2fa/confirm", auth.Confirm2FA)
+	userGroup.Post("/2fa/verify", auth.Verify2FA)
+	userGroup.Post("/2fa/backup-verify", auth.VerifyBackupCode)
 	userGroup.Post("/2fa/disable", auth.Disable2FA)
+	userGroup.Post("/2fa/backup-codes", auth.GenerateBackupCodes)
 	
 	// Account deletion
 	userGroup.Delete("/account", user.DeleteAccount)

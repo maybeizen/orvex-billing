@@ -21,6 +21,8 @@ export interface User {
   avatar_url?: string;
   email_verified: boolean;
   two_factor_enabled: boolean;
+  two_factor_verified?: boolean;
+  role?: string;
   created_at: string;
 }
 
@@ -96,6 +98,62 @@ class ApiClient {
 
   async getInvoices(): Promise<ApiResponse> {
     const response = await this.client.get("/services/invoices");
+    return response.data;
+  }
+
+  // Profile Management
+  async updateProfile(data: Partial<User>): Promise<ApiResponse> {
+    const response = await this.client.put("/v1/user/profile", data);
+    return response.data;
+  }
+
+  async changePassword(data: { current_password: string; new_password: string }): Promise<ApiResponse> {
+    const response = await this.client.put("/v1/user/password", data);
+    return response.data;
+  }
+
+  async uploadAvatar(formData: FormData): Promise<ApiResponse> {
+    const response = await this.client.post("/v1/user/avatar", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return response.data;
+  }
+
+  async removeAvatar(): Promise<ApiResponse> {
+    const response = await this.client.delete("/v1/user/avatar");
+    return response.data;
+  }
+
+  // Two-Factor Authentication
+  async setup2FA(): Promise<ApiResponse> {
+    const response = await this.client.post("/v1/user/2fa/setup");
+    return response.data;
+  }
+
+  async enable2FA(data: { secret: string; token: string; password: string }): Promise<ApiResponse> {
+    const response = await this.client.post("/v1/user/2fa/enable", data);
+    return response.data;
+  }
+
+  async disable2FA(token: string): Promise<ApiResponse> {
+    const response = await this.client.post("/v1/user/2fa/disable", { token });
+    return response.data;
+  }
+
+  async generateBackupCodes(): Promise<ApiResponse> {
+    const response = await this.client.post("/v1/user/2fa/backup-codes");
+    return response.data;
+  }
+
+  async verify2FA(token: string): Promise<ApiResponse> {
+    const response = await this.client.post("/v1/user/2fa/verify", { token });
+    return response.data;
+  }
+
+  async verifyBackupCode(code: string): Promise<ApiResponse> {
+    const response = await this.client.post("/v1/user/2fa/backup-verify", { code });
     return response.data;
   }
 }

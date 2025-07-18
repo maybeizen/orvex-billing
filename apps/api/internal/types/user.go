@@ -51,6 +51,17 @@ type Session struct {
 	UpdatedAt time.Time `json:"updated_at"`
 }
 
+type BackupCode struct {
+	ID        uint       `json:"id" gorm:"primaryKey"`
+	UserID    uint       `json:"user_id" gorm:"not null;index"`
+	User      User       `json:"user" gorm:"foreignKey:UserID"`
+	Code      string     `json:"code" gorm:"not null;index"`
+	Used      bool       `json:"used" gorm:"default:false"`
+	UsedAt    *time.Time `json:"used_at"`
+	CreatedAt time.Time  `json:"created_at"`
+	UpdatedAt time.Time  `json:"updated_at"`
+}
+
 type UserRole string
 
 const (

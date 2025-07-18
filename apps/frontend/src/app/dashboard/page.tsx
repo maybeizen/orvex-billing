@@ -3,9 +3,9 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "@/lib/auth-context";
 import { useRouter } from "next/navigation";
-import { motion } from "framer-motion";
 import DashboardLayout from "@/components/dashboard-layout";
 import { LoadingScreen } from "@/components/ui/loading-spinner";
+import { Button } from "@/components/ui/button";
 import { api } from "@/lib/api";
 
 interface DashboardStats {
@@ -14,24 +14,47 @@ interface DashboardStats {
   revenue: number;
 }
 
+interface Service {
+  id: string;
+  name: string;
+  status: string;
+  created_at: string;
+  plan: string;
+}
+
+interface Invoice {
+  id: string;
+  amount: number;
+  status: string;
+  created_at: string;
+  due_date: string;
+}
+
 export default function DashboardPage() {
-  const { user, loading } = useAuth();
+  const { user, loading, requires2FA } = useAuth();
   const router = useRouter();
+  const [activeTab, setActiveTab] = useState<"services" | "invoices">("services");
   const [stats, setStats] = useState<DashboardStats>({
     services: 0,
     invoices: 0,
     revenue: 0,
   });
+  const [services, setServices] = useState<Service[]>([]);
+  const [invoices, setInvoices] = useState<Invoice[]>([]);
   const [loadingStats, setLoadingStats] = useState(true);
 
   useEffect(() => {
-    if (!loading && !user) {
-      router.push("/auth/login");
+    if (!loading) {
+      if (!user) {
+        router.push("/auth/login");
+      } else if (requires2FA) {
+        router.push("/auth/verify-2fa");
+      }
     }
-  }, [user, loading, router]);
+  }, [user, loading, requires2FA, router]);
 
   useEffect(() => {
-    const fetchStats = async () => {
+    const fetchData = async () => {
       try {
         const [servicesRes, invoicesRes] = await Promise.all([
           api.getServices().catch(() => ({ success: false, data: [] })),
@@ -41,6 +64,8 @@ export default function DashboardPage() {
         const servicesData = servicesRes.success ? servicesRes.data || [] : [];
         const invoicesData = invoicesRes.success ? invoicesRes.data || [] : [];
 
+        setServices(servicesData);
+        setInvoices(invoicesData);
         setStats({
           services: servicesData.length,
           invoices: invoicesData.length,
@@ -50,14 +75,14 @@ export default function DashboardPage() {
           ),
         });
       } catch (error) {
-        console.error("Failed to fetch dashboard stats:", error);
+        console.error("Failed to fetch dashboard data:", error);
       } finally {
         setLoadingStats(false);
       }
     };
 
     if (user) {
-      fetchStats();
+      fetchData();
     }
   }, [user]);
 
@@ -71,286 +96,242 @@ export default function DashboardPage() {
 
   return (
     <DashboardLayout>
-      <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8 }}
-        className="space-y-10"
-      >
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2, duration: 0.8 }}
-          className="relative"
-        >
-          <div className="absolute inset-0 bg-gradient-to-r from-violet-600/10 to-cyan-600/10 rounded-3xl blur-xl"></div>
-          <div className="relative bg-black/40 backdrop-blur-3xl border border-white/10 rounded-3xl p-10 shadow-2xl">
-            <div className="flex items-center justify-between">
-              <div>
-                <motion.h1
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.4, duration: 0.6 }}
-                  className="text-5xl font-black text-white mb-4 font-['Sora']"
-                >
-                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-cyan-400">
-                    Welcome back,
-                  </span>
-                  <span className="block text-white">{user.first_name}!</span>
-                </motion.h1>
-                <motion.p
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.6, duration: 0.6 }}
-                  className="text-white/70 text-xl"
-                >
-                  Here's an overview of your account and services.
-                </motion.p>
-              </div>
-              <motion.div
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.8, duration: 0.6 }}
-                className="hidden lg:block"
-              >
-                <div className="w-32 h-32 bg-gradient-to-br from-violet-500/20 to-cyan-500/20 rounded-full flex items-center justify-center">
-                  <i className="fas fa-user-circle text-6xl text-white/30"></i>
-                </div>
-              </motion.div>
-            </div>
-          </div>
-        </motion.div>
+      <div className="space-y-8">
+        {/* Header */}
+        <div className="mb-8">
+          <h1 className="text-4xl font-black text-white mb-2">
+            Welcome back,{" "}
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400">
+              {user.first_name}!
+            </span>
+          </h1>
+          <p className="text-gray-300 text-lg">
+            Here's an overview of your account and services.
+          </p>
+        </div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4, duration: 0.8 }}
-          className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3"
-        >
+        {/* Stats Cards */}
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {[
             {
               title: "Active Services",
               value: stats.services,
               icon: "fas fa-server",
-              gradient: "from-violet-500 to-purple-500",
-              bgGradient: "from-violet-500/10 to-purple-500/10",
+              color: "text-blue-400",
+              bgColor: "bg-blue-500/10",
+              borderColor: "border-blue-500/20",
             },
             {
               title: "Total Invoices",
               value: stats.invoices,
               icon: "fas fa-file-invoice",
-              gradient: "from-blue-500 to-cyan-500",
-              bgGradient: "from-blue-500/10 to-cyan-500/10",
+              color: "text-purple-400",
+              bgColor: "bg-purple-500/10",
+              borderColor: "border-purple-500/20",
             },
             {
-              title: "Total Revenue",
+              title: "Credit Balance",
               value: `$${stats.revenue.toFixed(2)}`,
-              icon: "fas fa-dollar-sign",
-              gradient: "from-green-500 to-emerald-500",
-              bgGradient: "from-green-500/10 to-emerald-500/10",
+              icon: "fas fa-wallet",
+              color: "text-green-400",
+              bgColor: "bg-green-500/10",
+              borderColor: "border-green-500/20",
             },
           ].map((stat, index) => (
-            <motion.div
+            <div
               key={stat.title}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.6 + index * 0.2, duration: 0.6 }}
-              whileHover={{ y: -8, scale: 1.02 }}
-              className="group cursor-pointer"
+              className={`p-6 ${stat.bgColor} rounded-xl border ${stat.borderColor} backdrop-blur-sm`}
             >
-              <div className="relative">
-                <div className="absolute inset-0 bg-gradient-to-br from-violet-600/5 to-cyan-600/5 rounded-2xl blur-xl"></div>
-                <div
-                  className={`relative bg-gradient-to-br ${stat.bgGradient} backdrop-blur-xl border border-white/10 rounded-2xl p-8 shadow-xl hover:shadow-2xl transition-all duration-300`}
-                >
-                  <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl" />
-                  <div className="relative z-10">
-                    <div className="flex items-center justify-between mb-6">
-                      <div
-                        className={`w-16 h-16 rounded-xl bg-gradient-to-r ${stat.gradient} flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-lg`}
-                      >
-                        <i className={`${stat.icon} text-white text-2xl`}></i>
-                      </div>
-                      <div className="text-right">
-                        <div className="text-3xl font-black text-white font-['Sora']">
-                          {loadingStats ? (
-                            <div className="animate-pulse bg-gray-600 h-8 w-20 rounded"></div>
-                          ) : (
-                            stat.value
-                          )}
-                        </div>
-                        <div className="text-white/60 text-sm font-medium mt-1">
-                          {stat.title}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-gray-300 text-sm font-medium">{stat.title}</p>
+                  <p className="text-2xl font-bold text-white mt-1">
+                    {loadingStats ? (
+                      <div className="animate-pulse bg-gray-600 h-8 w-20 rounded"></div>
+                    ) : (
+                      stat.value
+                    )}
+                  </p>
+                </div>
+                <div className="w-12 h-12 bg-white/10 rounded-lg flex items-center justify-center">
+                  <i className={`${stat.icon} ${stat.color} text-xl`}></i>
                 </div>
               </div>
-            </motion.div>
+            </div>
           ))}
-        </motion.div>
+        </div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.8, duration: 0.8 }}
-          className="relative"
-        >
-          <div className="absolute inset-0 bg-gradient-to-r from-violet-600/10 to-cyan-600/10 rounded-3xl blur-xl"></div>
-          <div className="relative bg-black/40 backdrop-blur-3xl border border-white/10 rounded-3xl p-10 shadow-2xl">
-            <div className="mb-8">
-              <h3 className="text-3xl font-bold text-white mb-2 font-['Sora']">
-                Quick Actions
-              </h3>
-              <p className="text-white/60 text-lg">Shortcuts to common tasks</p>
-            </div>
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-              {[
-                {
-                  title: "New Service",
-                  description: "Create a new service for your account",
-                  icon: "fas fa-plus",
-                  gradient: "from-violet-500 to-purple-500",
-                  onClick: () => router.push("/dashboard/services"),
-                },
-                {
-                  title: "View Invoices",
-                  description: "Check your billing history and invoices",
-                  icon: "fas fa-file-invoice",
-                  gradient: "from-blue-500 to-cyan-500",
-                  onClick: () => router.push("/dashboard/invoices"),
-                },
-                {
-                  title: "Manage Profile",
-                  description: "Update your account settings and preferences",
-                  icon: "fas fa-user-cog",
-                  gradient: "from-green-500 to-emerald-500",
-                  onClick: () => router.push("/dashboard/profile"),
-                },
-                {
-                  title: "Support",
-                  description: "Get help from our support team",
-                  icon: "fas fa-headset",
-                  gradient: "from-orange-500 to-red-500",
-                  onClick: () => {},
-                },
-              ].map((action, index) => (
-                <motion.div
-                  key={action.title}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 1 + index * 0.1, duration: 0.6 }}
-                  whileHover={{ y: -5, scale: 1.05 }}
-                  className="cursor-pointer group"
-                  onClick={action.onClick}
-                >
-                  <div className="bg-gray-800/30 backdrop-blur-sm p-6 rounded-xl border border-white/10 hover:border-white/20 transition-all duration-300 group-hover:shadow-xl">
-                    <div
-                      className={`w-14 h-14 rounded-xl bg-gradient-to-r ${action.gradient} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300 shadow-lg`}
-                    >
-                      <i className={`${action.icon} text-white text-xl`}></i>
-                    </div>
-                    <h4 className="text-xl font-bold text-white mb-2 font-['Sora']">
-                      {action.title}
-                    </h4>
-                    <p className="text-sm text-white/60 leading-relaxed">
-                      {action.description}
-                    </p>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
+        {/* Main Content Container */}
+        <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-6">
+          {/* Tab Navigation */}
+          <div className="flex space-x-1 bg-white/5 p-1 rounded-lg mb-6">
+            <button
+              onClick={() => setActiveTab("services")}
+              className={`flex-1 px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 ${
+                activeTab === "services"
+                  ? "bg-white/10 text-white shadow-sm"
+                  : "text-gray-400 hover:text-white hover:bg-white/5"
+              }`}
+            >
+              <i className="fas fa-server mr-2"></i>
+              Services
+            </button>
+            <button
+              onClick={() => setActiveTab("invoices")}
+              className={`flex-1 px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 ${
+                activeTab === "invoices"
+                  ? "bg-white/10 text-white shadow-sm"
+                  : "text-gray-400 hover:text-white hover:bg-white/5"
+              }`}
+            >
+              <i className="fas fa-file-invoice mr-2"></i>
+              Invoices
+            </button>
           </div>
-        </motion.div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.2, duration: 0.8 }}
-          className="relative"
-        >
-          <div className="absolute inset-0 bg-gradient-to-r from-violet-600/10 to-cyan-600/10 rounded-3xl blur-xl"></div>
-          <div className="relative bg-black/40 backdrop-blur-3xl border border-white/10 rounded-3xl p-10 shadow-2xl">
-            <div className="mb-8">
-              <h3 className="text-3xl font-bold text-white mb-2 font-['Sora']">
-                Account Status
-              </h3>
-              <p className="text-white/60 text-lg">
-                Security and verification status
-              </p>
-            </div>
-            <div className="space-y-6">
-              <div className="flex items-center justify-between p-6 bg-gray-800/30 rounded-xl border border-white/10">
-                <div className="flex items-center">
-                  <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-lg flex items-center justify-center mr-4">
-                    <i className="fas fa-envelope text-white text-xl"></i>
-                  </div>
-                  <div>
-                    <span className="text-white font-medium text-lg">
-                      Email Verification
-                    </span>
-                    <p className="text-white/60 text-sm">
-                      Verify your email address
-                    </p>
-                  </div>
+          {/* Tab Content */}
+          <div className="min-h-[400px]">
+            {activeTab === "services" && (
+              <div className="space-y-4">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-xl font-bold text-white">Your Services</h3>
+                  <Button
+                    onClick={() => router.push("/dashboard/services/create")}
+                    variant="glass"
+                    size="sm"
+                    icon="fas fa-plus"
+                    iconPosition="left"
+                  >
+                    Purchase a Service
+                  </Button>
                 </div>
-                <span
-                  className={`inline-flex items-center px-4 py-2 rounded-full text-sm font-medium ${
-                    user.email_verified
-                      ? "bg-green-500/20 text-green-400 border border-green-500/30"
-                      : "bg-red-500/20 text-red-400 border border-red-500/30"
-                  }`}
-                >
-                  {user.email_verified ? (
-                    <>
-                      <i className="fas fa-check mr-2"></i> Verified
-                    </>
-                  ) : (
-                    <>
-                      <i className="fas fa-exclamation-triangle mr-2"></i> Not
-                      Verified
-                    </>
-                  )}
-                </span>
+                {loadingStats ? (
+                  <div className="space-y-4">
+                    {[1, 2, 3].map((i) => (
+                      <div key={i} className="animate-pulse bg-white/5 rounded-lg p-4">
+                        <div className="h-4 bg-gray-600 rounded w-1/4 mb-2"></div>
+                        <div className="h-3 bg-gray-600 rounded w-1/2"></div>
+                      </div>
+                    ))}
+                  </div>
+                ) : services.length === 0 ? (
+                  <div className="text-center py-12">
+                    <i className="fas fa-server text-4xl text-gray-400 mb-4"></i>
+                    <p className="text-gray-400 text-lg">No services found</p>
+                    <p className="text-gray-500 text-sm">Create your first service to get started</p>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    {services.map((service) => (
+                      <div
+                        key={service.id}
+                        className="flex items-center justify-between p-4 bg-white/5 rounded-lg border border-white/10 hover:bg-white/10 transition-colors duration-200"
+                      >
+                        <div className="flex items-center space-x-4">
+                          <div className="w-10 h-10 bg-blue-500/20 rounded-lg flex items-center justify-center">
+                            <i className="fas fa-server text-blue-400"></i>
+                          </div>
+                          <div>
+                            <h4 className="text-white font-medium">{service.name}</h4>
+                            <p className="text-gray-400 text-sm">{service.plan}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center space-x-4">
+                          <span
+                            className={`px-3 py-1 rounded-full text-xs font-medium ${
+                              service.status === "active"
+                                ? "bg-green-500/20 text-green-400"
+                                : "bg-red-500/20 text-red-400"
+                            }`}
+                          >
+                            {service.status}
+                          </span>
+                          <button className="text-gray-400 hover:text-white">
+                            <i className="fas fa-chevron-right"></i>
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
-              <div className="flex items-center justify-between p-6 bg-gray-800/30 rounded-xl border border-white/10">
-                <div className="flex items-center">
-                  <div className="w-12 h-12 bg-gradient-to-r from-violet-500 to-purple-500 rounded-lg flex items-center justify-center mr-4">
-                    <i className="fas fa-shield-alt text-white text-xl"></i>
-                  </div>
-                  <div>
-                    <span className="text-white font-medium text-lg">
-                      Two-Factor Authentication
-                    </span>
-                    <p className="text-white/60 text-sm">
-                      Secure your account with 2FA
-                    </p>
-                  </div>
+            )}
+
+            {activeTab === "invoices" && (
+              <div className="space-y-4">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-xl font-bold text-white">Recent Invoices</h3>
+                  <Button
+                    onClick={() => router.push("/dashboard/invoices")}
+                    variant="glass"
+                    size="sm"
+                    icon="fas fa-eye"
+                    iconPosition="left"
+                  >
+                    View All
+                  </Button>
                 </div>
-                <span
-                  className={`inline-flex items-center px-4 py-2 rounded-full text-sm font-medium ${
-                    user.two_factor_enabled
-                      ? "bg-green-500/20 text-green-400 border border-green-500/30"
-                      : "bg-yellow-500/20 text-yellow-400 border border-yellow-500/30"
-                  }`}
-                >
-                  {user.two_factor_enabled ? (
-                    <>
-                      <i className="fas fa-check mr-2"></i> Enabled
-                    </>
-                  ) : (
-                    <>
-                      <i className="fas fa-exclamation-triangle mr-2"></i>{" "}
-                      Disabled
-                    </>
-                  )}
-                </span>
+                {loadingStats ? (
+                  <div className="space-y-4">
+                    {[1, 2, 3].map((i) => (
+                      <div key={i} className="animate-pulse bg-white/5 rounded-lg p-4">
+                        <div className="h-4 bg-gray-600 rounded w-1/4 mb-2"></div>
+                        <div className="h-3 bg-gray-600 rounded w-1/2"></div>
+                      </div>
+                    ))}
+                  </div>
+                ) : invoices.length === 0 ? (
+                  <div className="text-center py-12">
+                    <i className="fas fa-file-invoice text-4xl text-gray-400 mb-4"></i>
+                    <p className="text-gray-400 text-lg">No invoices found</p>
+                    <p className="text-gray-500 text-sm">Your invoices will appear here</p>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    {invoices.slice(0, 5).map((invoice) => (
+                      <div
+                        key={invoice.id}
+                        className="flex items-center justify-between p-4 bg-white/5 rounded-lg border border-white/10 hover:bg-white/10 transition-colors duration-200"
+                      >
+                        <div className="flex items-center space-x-4">
+                          <div className="w-10 h-10 bg-purple-500/20 rounded-lg flex items-center justify-center">
+                            <i className="fas fa-file-invoice text-purple-400"></i>
+                          </div>
+                          <div>
+                            <h4 className="text-white font-medium">#{invoice.id}</h4>
+                            <p className="text-gray-400 text-sm">
+                              Due: {new Date(invoice.due_date).toLocaleDateString()}
+                            </p>
+                          </div>
+                        </div>
+                        <div className="flex items-center space-x-4">
+                          <span className="text-white font-medium">
+                            ${invoice.amount.toFixed(2)}
+                          </span>
+                          <span
+                            className={`px-3 py-1 rounded-full text-xs font-medium ${
+                              invoice.status === "paid"
+                                ? "bg-green-500/20 text-green-400"
+                                : invoice.status === "pending"
+                                ? "bg-yellow-500/20 text-yellow-400"
+                                : "bg-red-500/20 text-red-400"
+                            }`}
+                          >
+                            {invoice.status}
+                          </span>
+                          <button className="text-gray-400 hover:text-white">
+                            <i className="fas fa-chevron-right"></i>
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
-            </div>
+            )}
           </div>
-        </motion.div>
-      </motion.div>
+        </div>
+      </div>
     </DashboardLayout>
   );
 }

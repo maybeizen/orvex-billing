@@ -4,15 +4,13 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth-context";
-import { Input, InputLabel, Checkbox } from "@/components/ui/input";
+import { Input, InputLabel, Checkbox } from "@/components/ui/input/index";
 import { Button } from "@/components/ui/button";
 import AuthLayout from "@/components/auth-layout";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [totpCode, setTotpCode] = useState("");
-  const [showTotp, setShowTotp] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
@@ -26,15 +24,11 @@ export default function LoginPage() {
     setError("");
 
     try {
-      await login(email, password, totpCode || undefined);
+      await login(email, password);
+      // Login successful - the auth context will handle routing based on 2FA status
       router.push("/dashboard");
     } catch (err: any) {
-      if (err.message.includes("2FA") || err.message.includes("TOTP")) {
-        setShowTotp(true);
-        setError("Please enter your 2FA code");
-      } else {
-        setError(err.message || "Login failed");
-      }
+      setError(err.message || "Login failed");
     } finally {
       setLoading(false);
     }
@@ -51,18 +45,8 @@ export default function LoginPage() {
         </div>
 
         {error && (
-          <div
-            className={`px-4 py-3 rounded-xl flex items-center border ${
-              showTotp
-                ? "bg-yellow-500/10 border-yellow-500/20 text-yellow-400"
-                : "bg-red-500/10 border-red-500/20 text-red-400"
-            }`}
-          >
-            <i
-              className={`${
-                showTotp ? "fas fa-shield-alt" : "fas fa-exclamation-triangle"
-              } mr-3`}
-            ></i>
+          <div className="px-4 py-3 rounded-xl flex items-center border bg-red-500/10 border-red-500/20 text-red-400">
+            <i className="fas fa-exclamation-triangle mr-3"></i>
             <span className="font-medium">{error}</span>
           </div>
         )}
@@ -90,18 +74,6 @@ export default function LoginPage() {
             />
           </div>
 
-          {showTotp && (
-            <div>
-              <InputLabel>2FA Code</InputLabel>
-              <Input
-                type="text"
-                value={totpCode}
-                onChange={(e) => setTotpCode(e.target.value)}
-                placeholder="Enter 6-digit code"
-                required
-              />
-            </div>
-          )}
 
           <div className="flex items-center justify-between">
             <Checkbox
@@ -128,7 +100,7 @@ export default function LoginPage() {
             iconPosition="right"
             rounded="md"
           >
-            {showTotp ? "Verify & Sign In" : "Let's go!"}
+            Let's go!
           </Button>
         </form>
 

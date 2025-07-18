@@ -3,6 +3,7 @@ package user
 import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/orvexcc/billing/api/internal/db"
+	"github.com/orvexcc/billing/api/internal/middleware"
 	"github.com/orvexcc/billing/api/internal/types"
 	"github.com/orvexcc/billing/api/internal/utils"
 )
@@ -26,9 +27,26 @@ func GetProfile(c *fiber.Ctx) error {
 	user.PasswordHash = ""
 	user.TwoFactorSecret = ""
 
+	// Check if 2FA is verified for this session
+	twoFactorVerified := false
+	if user.TwoFactorEnabled {
+		sess, err := middleware.SessionStore.Get(c)
+		if err == nil {
+			if verified := sess.Get("2fa_verified"); verified != nil {
+				if verifiedBool, ok := verified.(bool); ok {
+					twoFactorVerified = verifiedBool
+				}
+			}
+		}
+	} else {
+		// If 2FA is not enabled, consider it verified
+		twoFactorVerified = true
+	}
+
 	return c.JSON(fiber.Map{
 		"success": true,
 		"user":    user,
+		"two_factor_verified": twoFactorVerified,
 	})
 }
 

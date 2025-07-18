@@ -54,12 +54,8 @@ func Login(c *fiber.Ctx) error {
 		})
 	}
 
-	if user.TwoFactorEnabled && req.TOTPCode == "" {
-		return c.Status(fiber.StatusUnauthorized).JSON(types.AuthResponse{
-			Success: false,
-			Message: "Two-factor authentication required",
-		})
-	}
+	// Don't require 2FA during initial login
+	// This will be handled by middleware after login
 
 	user.FailedAttempts = 0
 	user.AccountLocked = false
@@ -77,6 +73,7 @@ func Login(c *fiber.Ctx) error {
 
 	sess.Set("user_id", user.ID)
 	sess.Set("authenticated", true)
+	// Don't set 2fa_verified during login - this will be set by the verify endpoint
 	if err := sess.Save(); err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(types.AuthResponse{
 			Success: false,

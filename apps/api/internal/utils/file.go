@@ -80,7 +80,9 @@ func DetectContentType(data []byte) string {
 		return "image/png"
 	}
 
-	if len(data) >= 3 && data[0] == 0xFF && data[1] == 0xD8 && data[2] == 0xFF {
+	// Improved JPEG detection - just check for SOI marker (0xFF 0xD8)
+	// The third byte can be any marker (0xE0, 0xE1, 0xDB, etc.)
+	if len(data) >= 2 && data[0] == 0xFF && data[1] == 0xD8 {
 		return "image/jpeg"
 	}
 
