@@ -31,6 +31,7 @@ func main() {
 	err = db.DB.AutoMigrate(
 		&types.User{}, 
 		&types.Session{}, 
+		&types.BackupCode{},
 		&types.Service{}, 
 		&types.Invoice{}, 
 		&types.InvoiceItem{},
