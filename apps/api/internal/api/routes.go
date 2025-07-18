@@ -60,6 +60,11 @@ func RegisterRoutes(app *fiber.App) {
 	// Account deletion
 	userGroup.Delete("/account", user.DeleteAccount)
 
+	// Session management
+	userGroup.Get("/sessions", user.GetUserSessions)
+	userGroup.Delete("/sessions/:sessionId", user.RevokeSession)
+	userGroup.Delete("/sessions/others", user.RevokeAllOtherSessions)
+
 	// Public user lookup by UUID (optional authentication)
 	api.Get("/users/:uuid", middleware.OptionalAuth, user.GetUserByUUID)
 

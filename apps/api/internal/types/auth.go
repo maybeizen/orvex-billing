@@ -23,6 +23,7 @@ type AuthResponse struct {
 type PasswordChangeRequest struct {
 	CurrentPassword string `json:"current_password" validate:"required"`
 	NewPassword     string `json:"new_password" validate:"required,min=8"`
+	TOTPCode        string `json:"totp_code,omitempty"`
 }
 
 type ProfileUpdateRequest struct {
@@ -33,10 +34,12 @@ type ProfileUpdateRequest struct {
 
 type UsernameUpdateRequest struct {
 	Username string `json:"username" validate:"required,min=3,max=50,alphanum"`
+	TOTPCode string `json:"totp_code,omitempty"`
 }
 
 type EmailUpdateRequest struct {
-	Email string `json:"email" validate:"required,email"`
+	Email    string `json:"email" validate:"required,email"`
+	TOTPCode string `json:"totp_code,omitempty"`
 }
 
 type NotificationPreferencesRequest struct {

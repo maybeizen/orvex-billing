@@ -8,6 +8,7 @@ import (
 	"github.com/orvexcc/billing/api/internal/utils"
 )
 
+
 func ChangePassword(c *fiber.Ctx) error {
 	userID := c.Locals("user_id")
 	if userID == nil {
@@ -40,6 +41,13 @@ func ChangePassword(c *fiber.Ctx) error {
 	if !middleware.CheckPasswordHash(req.CurrentPassword, user.PasswordHash) {
 		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
 			"error": "Current password is incorrect",
+		})
+	}
+
+	// Verify 2FA if required
+	if err := verify2FAIfRequired(&user, req.TOTPCode); err != nil {
+		return c.Status(err.(*fiber.Error).Code).JSON(fiber.Map{
+			"error": err.Error(),
 		})
 	}
 

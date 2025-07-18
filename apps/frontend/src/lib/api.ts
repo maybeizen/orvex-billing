@@ -142,18 +142,35 @@ class ApiClient {
     return response.data;
   }
 
-  async generateBackupCodes(): Promise<ApiResponse> {
-    const response = await this.client.post("/v1/user/2fa/backup-codes");
+  async generateBackupCodes(token: string): Promise<ApiResponse> {
+    const response = await this.client.post("/v1/user/2fa/backup-codes", { token });
     return response.data;
   }
 
-  async verify2FA(token: string): Promise<ApiResponse> {
-    const response = await this.client.post("/v1/user/2fa/verify", { token });
+  async verify2FA(token: string | { token: string }): Promise<ApiResponse> {
+    const data = typeof token === 'string' ? { token } : token;
+    const response = await this.client.post("/v1/user/2fa/verify", data);
     return response.data;
   }
 
   async verifyBackupCode(code: string): Promise<ApiResponse> {
     const response = await this.client.post("/v1/user/2fa/backup-verify", { code });
+    return response.data;
+  }
+
+  // Session Management
+  async getUserSessions(): Promise<ApiResponse> {
+    const response = await this.client.get("/v1/user/sessions");
+    return response.data;
+  }
+
+  async revokeSession(sessionId: string): Promise<ApiResponse> {
+    const response = await this.client.delete(`/v1/user/sessions/${sessionId}`);
+    return response.data;
+  }
+
+  async revokeAllOtherSessions(): Promise<ApiResponse> {
+    const response = await this.client.delete("/v1/user/sessions/others");
     return response.data;
   }
 }

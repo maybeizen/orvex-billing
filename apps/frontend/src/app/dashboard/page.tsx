@@ -31,9 +31,11 @@ interface Invoice {
 }
 
 export default function DashboardPage() {
-  const { user, loading, requires2FA } = useAuth();
+  const { user, loading } = useAuth();
   const router = useRouter();
-  const [activeTab, setActiveTab] = useState<"services" | "invoices">("services");
+  const [activeTab, setActiveTab] = useState<"services" | "invoices">(
+    "services"
+  );
   const [stats, setStats] = useState<DashboardStats>({
     services: 0,
     invoices: 0,
@@ -47,11 +49,9 @@ export default function DashboardPage() {
     if (!loading) {
       if (!user) {
         router.push("/auth/login");
-      } else if (requires2FA) {
-        router.push("/auth/verify-2fa");
       }
     }
-  }, [user, loading, requires2FA, router]);
+  }, [user, loading, router]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -144,13 +144,11 @@ export default function DashboardPage() {
             >
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-gray-300 text-sm font-medium">{stat.title}</p>
+                  <p className="text-gray-300 text-sm font-medium">
+                    {stat.title}
+                  </p>
                   <p className="text-2xl font-bold text-white mt-1">
-                    {loadingStats ? (
-                      <div className="animate-pulse bg-gray-600 h-8 w-20 rounded"></div>
-                    ) : (
-                      stat.value
-                    )}
+                    {loadingStats ? "Loading stats..." : stat.value}
                   </p>
                 </div>
                 <div className="w-12 h-12 bg-white/10 rounded-lg flex items-center justify-center">
@@ -194,7 +192,9 @@ export default function DashboardPage() {
             {activeTab === "services" && (
               <div className="space-y-4">
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-xl font-bold text-white">Your Services</h3>
+                  <h3 className="text-xl font-bold text-white">
+                    Your Services
+                  </h3>
                   <Button
                     onClick={() => router.push("/dashboard/services/create")}
                     variant="glass"
@@ -208,7 +208,10 @@ export default function DashboardPage() {
                 {loadingStats ? (
                   <div className="space-y-4">
                     {[1, 2, 3].map((i) => (
-                      <div key={i} className="animate-pulse bg-white/5 rounded-lg p-4">
+                      <div
+                        key={i}
+                        className="animate-pulse bg-white/5 rounded-lg p-4"
+                      >
                         <div className="h-4 bg-gray-600 rounded w-1/4 mb-2"></div>
                         <div className="h-3 bg-gray-600 rounded w-1/2"></div>
                       </div>
@@ -218,7 +221,9 @@ export default function DashboardPage() {
                   <div className="text-center py-12">
                     <i className="fas fa-server text-4xl text-gray-400 mb-4"></i>
                     <p className="text-gray-400 text-lg">No services found</p>
-                    <p className="text-gray-500 text-sm">Create your first service to get started</p>
+                    <p className="text-gray-500 text-sm">
+                      Create your first service to get started
+                    </p>
                   </div>
                 ) : (
                   <div className="space-y-4">
@@ -232,8 +237,12 @@ export default function DashboardPage() {
                             <i className="fas fa-server text-blue-400"></i>
                           </div>
                           <div>
-                            <h4 className="text-white font-medium">{service.name}</h4>
-                            <p className="text-gray-400 text-sm">{service.plan}</p>
+                            <h4 className="text-white font-medium">
+                              {service.name}
+                            </h4>
+                            <p className="text-gray-400 text-sm">
+                              {service.plan}
+                            </p>
                           </div>
                         </div>
                         <div className="flex items-center space-x-4">
@@ -260,7 +269,9 @@ export default function DashboardPage() {
             {activeTab === "invoices" && (
               <div className="space-y-4">
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-xl font-bold text-white">Recent Invoices</h3>
+                  <h3 className="text-xl font-bold text-white">
+                    Recent Invoices
+                  </h3>
                   <Button
                     onClick={() => router.push("/dashboard/invoices")}
                     variant="glass"
@@ -274,7 +285,10 @@ export default function DashboardPage() {
                 {loadingStats ? (
                   <div className="space-y-4">
                     {[1, 2, 3].map((i) => (
-                      <div key={i} className="animate-pulse bg-white/5 rounded-lg p-4">
+                      <div
+                        key={i}
+                        className="animate-pulse bg-white/5 rounded-lg p-4"
+                      >
                         <div className="h-4 bg-gray-600 rounded w-1/4 mb-2"></div>
                         <div className="h-3 bg-gray-600 rounded w-1/2"></div>
                       </div>
@@ -284,7 +298,9 @@ export default function DashboardPage() {
                   <div className="text-center py-12">
                     <i className="fas fa-file-invoice text-4xl text-gray-400 mb-4"></i>
                     <p className="text-gray-400 text-lg">No invoices found</p>
-                    <p className="text-gray-500 text-sm">Your invoices will appear here</p>
+                    <p className="text-gray-500 text-sm">
+                      Your invoices will appear here
+                    </p>
                   </div>
                 ) : (
                   <div className="space-y-4">
@@ -298,9 +314,12 @@ export default function DashboardPage() {
                             <i className="fas fa-file-invoice text-purple-400"></i>
                           </div>
                           <div>
-                            <h4 className="text-white font-medium">#{invoice.id}</h4>
+                            <h4 className="text-white font-medium">
+                              #{invoice.id}
+                            </h4>
                             <p className="text-gray-400 text-sm">
-                              Due: {new Date(invoice.due_date).toLocaleDateString()}
+                              Due:{" "}
+                              {new Date(invoice.due_date).toLocaleDateString()}
                             </p>
                           </div>
                         </div>

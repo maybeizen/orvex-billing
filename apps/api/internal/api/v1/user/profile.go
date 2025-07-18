@@ -1,12 +1,42 @@
 package user
 
 import (
+	"time"
+	
 	"github.com/gofiber/fiber/v2"
 	"github.com/orvexcc/billing/api/internal/db"
 	"github.com/orvexcc/billing/api/internal/middleware"
 	"github.com/orvexcc/billing/api/internal/types"
 	"github.com/orvexcc/billing/api/internal/utils"
+	"github.com/pquerna/otp/totp"
 )
+
+// verify2FAIfRequired checks if 2FA is required and validates the TOTP code
+func verify2FAIfRequired(user *types.User, totpCode string) error {
+	if !user.TwoFactorEnabled {
+		return nil
+	}
+	
+	if totpCode == "" {
+		return fiber.NewError(fiber.StatusBadRequest, "2FA verification required")
+	}
+	
+	if len(totpCode) != 6 {
+		return fiber.NewError(fiber.StatusBadRequest, "Invalid TOTP code format")
+	}
+	
+	valid, err := totp.ValidateCustom(totpCode, user.TwoFactorSecret, time.Now(), totp.ValidateOpts{
+		Period:    30,
+		Skew:      1,
+		Digits:    6,
+		Algorithm: 1,
+	})
+	if err != nil || !valid {
+		return fiber.NewError(fiber.StatusUnauthorized, "Invalid TOTP code")
+	}
+	
+	return nil
+}
 
 func GetProfile(c *fiber.Ctx) error {
 	userID := c.Locals("user_id")
@@ -135,6 +165,13 @@ func UpdateUsername(c *fiber.Ctx) error {
 		})
 	}
 
+	// Verify 2FA if required
+	if err := verify2FAIfRequired(&user, req.TOTPCode); err != nil {
+		return c.Status(err.(*fiber.Error).Code).JSON(fiber.Map{
+			"error": err.Error(),
+		})
+	}
+
 	user.Username = req.Username
 	if err := db.DB.Save(&user).Error; err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
@@ -181,6 +218,13 @@ func UpdateEmail(c *fiber.Ctx) error {
 	if result.Error != nil {
 		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
 			"error": "User not found",
+		})
+	}
+
+	// Verify 2FA if required
+	if err := verify2FAIfRequired(&user, req.TOTPCode); err != nil {
+		return c.Status(err.(*fiber.Error).Code).JSON(fiber.Map{
+			"error": err.Error(),
 		})
 	}
 

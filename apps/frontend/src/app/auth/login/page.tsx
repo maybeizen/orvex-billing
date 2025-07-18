@@ -7,21 +7,50 @@ import { useAuth } from "@/lib/auth-context";
 import { Input, InputLabel, Checkbox } from "@/components/ui/input/index";
 import { Button } from "@/components/ui/button";
 import AuthLayout from "@/components/auth-layout";
+import { AuthGuard } from "@/components/auth/AuthGuard";
+import { validateField } from "@/lib/validation";
 
-export default function LoginPage() {
+function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [rememberMe, setRememberMe] = useState(false);
 
   const { login } = useAuth();
   const router = useRouter();
 
+  // Validation functions
+  const validateEmail = (value: string) => {
+    const result = validateField("email", value);
+    setFieldErrors(prev => ({ ...prev, email: result.error || "" }));
+    return result.isValid;
+  };
+
+  const validatePassword = (value: string) => {
+    const result = validateField("password", value);
+    setFieldErrors(prev => ({ ...prev, password: result.error || "" }));
+    return result.isValid;
+  };
+
+  const validateForm = () => {
+    const emailValid = validateEmail(email);
+    const passwordValid = validatePassword(password);
+    return emailValid && passwordValid;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
     setError("");
+    setFieldErrors({});
+
+    // Validate form before submission
+    if (!validateForm()) {
+      return;
+    }
+
+    setLoading(true);
 
     try {
       await login(email, password);
@@ -31,6 +60,22 @@ export default function LoginPage() {
       setError(err.message || "Login failed");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setEmail(value);
+    if (fieldErrors.email) {
+      validateEmail(value);
+    }
+  };
+
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setPassword(value);
+    if (fieldErrors.password) {
+      validatePassword(value);
     }
   };
 
@@ -57,9 +102,10 @@ export default function LoginPage() {
             <Input
               type="email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={handleEmailChange}
               placeholder="Enter your email"
               required
+              error={fieldErrors.email}
             />
           </div>
 
@@ -68,9 +114,10 @@ export default function LoginPage() {
             <Input
               type="password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={handlePasswordChange}
               placeholder="Enter your password"
               required
+              error={fieldErrors.password}
             />
           </div>
 
@@ -117,5 +164,14 @@ export default function LoginPage() {
         </div>
       </div>
     </AuthLayout>
+  );
+}
+
+// Wrap the component with AuthGuard
+export default function LoginPageWithGuard() {
+  return (
+    <AuthGuard>
+      <LoginPage />
+    </AuthGuard>
   );
 }

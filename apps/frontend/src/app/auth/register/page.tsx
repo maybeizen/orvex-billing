@@ -7,8 +7,9 @@ import { api } from "@/lib/api";
 import { Button } from "@/components/ui/button";
 import AuthLayout from "@/components/auth-layout";
 import { Input, InputLabel } from "@/components/ui/input/index";
+import { AuthGuard } from "@/components/auth/AuthGuard";
 
-export default function RegisterPage() {
+function RegisterPage() {
   const [formData, setFormData] = useState({
     email: "",
     username: "",
@@ -227,5 +228,14 @@ export default function RegisterPage() {
         </div>
       </div>
     </AuthLayout>
+  );
+}
+
+// Wrap the component with AuthGuard
+export default function RegisterPageWithGuard() {
+  return (
+    <AuthGuard>
+      <RegisterPage />
+    </AuthGuard>
   );
 }

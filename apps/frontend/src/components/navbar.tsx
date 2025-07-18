@@ -4,13 +4,21 @@ import { useState } from "react";
 import Link from "next/link";
 import { Button } from "./ui/button";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@/lib/auth-context";
 
 const Navbar: React.FC = () => {
   const router = useRouter();
+  const { user, logout } = useAuth();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const toggleMenu = () => setIsMenuOpen((prev) => !prev);
   const closeMenu = () => setIsMenuOpen(false);
+
+  const handleLogout = async () => {
+    await logout();
+    router.push("/");
+    closeMenu();
+  };
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-black/70 backdrop-blur-2xl border-b border-white/5">
@@ -41,15 +49,48 @@ const Navbar: React.FC = () => {
           </div>
 
           <div className="hidden md:block">
-            <Button
-              variant="glass"
-              size="sm"
-              rounded="md"
-              className="w-full block text-center text-white"
-              onClick={() => router.push("/auth/login")}
-            >
-              Get Started
-            </Button>
+            {user ? (
+              <div className="flex items-center space-x-3">
+                <span className="text-white/70 text-sm">
+                  Welcome, {user.first_name}
+                </span>
+                <Button
+                  variant="glass"
+                  size="sm"
+                  rounded="md"
+                  onClick={() => router.push("/dashboard")}
+                >
+                  Dashboard
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  rounded="md"
+                  onClick={handleLogout}
+                >
+                  Logout
+                </Button>
+              </div>
+            ) : (
+              <div className="flex items-center space-x-2">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  rounded="md"
+                  onClick={() => router.push("/auth/login")}
+                >
+                  Login
+                </Button>
+                <Button
+                  variant="glass"
+                  size="sm"
+                  rounded="md"
+                  onClick={() => router.push("/auth/register")}
+                >
+                  Get Started
+                </Button>
+              </div>
+            )}
           </div>
 
           <div className="md:hidden">
@@ -87,14 +128,57 @@ const Navbar: React.FC = () => {
               </a>
             ))}
             <div className="pt-2">
-              <Button
-                variant="glass"
-                rounded="md"
-                className="w-full block text-center text-white"
-                onClick={() => router.push("/auth/login")}
-              >
-                Get Started
-              </Button>
+              {user ? (
+                <div className="space-y-2">
+                  <div className="text-white/70 text-sm px-3">
+                    Welcome, {user.first_name}
+                  </div>
+                  <Button
+                    variant="glass"
+                    rounded="md"
+                    className="w-full block text-center text-white"
+                    onClick={() => {
+                      router.push("/dashboard");
+                      closeMenu();
+                    }}
+                  >
+                    Dashboard
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    rounded="md"
+                    className="w-full block text-center text-white"
+                    onClick={handleLogout}
+                  >
+                    Logout
+                  </Button>
+                </div>
+              ) : (
+                <div className="space-y-2">
+                  <Button
+                    variant="ghost"
+                    rounded="md"
+                    className="w-full block text-center text-white"
+                    onClick={() => {
+                      router.push("/auth/login");
+                      closeMenu();
+                    }}
+                  >
+                    Login
+                  </Button>
+                  <Button
+                    variant="glass"
+                    rounded="md"
+                    className="w-full block text-center text-white"
+                    onClick={() => {
+                      router.push("/auth/register");
+                      closeMenu();
+                    }}
+                  >
+                    Get Started
+                  </Button>
+                </div>
+              )}
             </div>
           </div>
         </div>

@@ -40,7 +40,9 @@ export default function TwoFactorPage() {
     setError("");
 
     try {
-      const response = await api.verify2FA({ token: code.trim() });
+      const response = useBackupCode 
+        ? await api.verifyBackupCode(code.trim())
+        : await api.verify2FA(code.trim());
       
       if (response.success) {
         // 2FA verification successful, refresh user and redirect
