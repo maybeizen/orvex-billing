@@ -102,7 +102,12 @@ var resetCmd = &cobra.Command{
 }
 
 func wipeDatabase() error {
-	// Get all table names
+	// Wipe sessions database first
+	if err := wipeSessionsDatabase(); err != nil {
+		return fmt.Errorf("failed to wipe sessions database: %v", err)
+	}
+
+	// Get all table names from main database
 	var tableNames []string
 	
 	// For SQLite, query sqlite_master table
@@ -156,6 +161,24 @@ func wipeDatabase() error {
 		return fmt.Errorf("failed to recreate tables: %v", err)
 	}
 
+	return nil
+}
+
+func wipeSessionsDatabase() error {
+	sessionsDbPath := "./database/sessions.db"
+	
+	// Check if sessions database exists
+	if _, err := os.Stat(sessionsDbPath); os.IsNotExist(err) {
+		// Sessions database doesn't exist, nothing to wipe
+		return nil
+	}
+
+	// Remove the sessions database file
+	if err := os.Remove(sessionsDbPath); err != nil {
+		return fmt.Errorf("failed to remove sessions database: %v", err)
+	}
+
+	fmt.Println("Wiped sessions database")
 	return nil
 }
 
