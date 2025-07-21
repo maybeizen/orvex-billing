@@ -3,8 +3,10 @@
   "version": "1.0.0",
   "scripts": {
     "dev": "go run cmd/server/main.go",
-    "build": "go build -o bin/api cmd/server/main.go",
-    "start": "npm run clean && npm run build && ./bin/api",
+    "build": "npm run clean && npm run build:server && npm run build:cli",
+    "build:server": "mkdir -p bin/api && go build -o bin/api/api cmd/server/main.go",
+    "build:cli": "mkdir -p bin/cli && go build -o bin/cli/cli cmd/cli/main.go",
+    "start": "npm run build && ./bin/api/api",
     "clean": "rm -rf bin"
   }
 }

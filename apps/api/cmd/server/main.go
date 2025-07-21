@@ -7,6 +7,7 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/orvexcc/billing/api/internal/api"
+	"github.com/orvexcc/billing/api/internal/cli"
 	"github.com/orvexcc/billing/api/internal/db"
 	"github.com/orvexcc/billing/api/internal/middleware"
 	"github.com/orvexcc/billing/api/internal/types"
@@ -16,6 +17,23 @@ import (
 func main() {
 	utils.LoadEnv()
 
+	// Check if CLI arguments are provided
+	if len(os.Args) > 1 {
+		// Connect to database for CLI operations
+		log.Println("Connecting to database...")
+		err := db.Connect()
+		if err != nil {
+			log.Fatalf("Failed to connect to database: %v", err)
+		}
+
+		// Execute CLI commands
+		if err := cli.Execute(); err != nil {
+			os.Exit(1)
+		}
+		return
+	}
+
+	// Server mode
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "3000"

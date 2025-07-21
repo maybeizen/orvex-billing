@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useAuth } from "@/lib/auth-context";
 import DashboardLayout from "@/components/dashboard-layout";
 import { LoadingScreen } from "@/components/ui/loading-spinner";
+import { Skeleton } from "@/components/ui/skeleton";
 import { ProfileGeneral } from "@/components/profile/ProfileGeneral";
 import { ProfileSecurity } from "@/components/profile/ProfileSecurity";
 import { ProfileAvatar } from "@/components/profile/ProfileAvatar";
@@ -43,7 +44,18 @@ export default function ProfilePage() {
   const [activeTab, setActiveTab] = useState<ProfileTab>("general");
 
   if (loading) {
-    return <LoadingScreen message="Loading profile..." />;
+    return (
+      <DashboardLayout>
+        <div className="space-y-8">
+          <div>
+            <Skeleton className="h-10 w-64 mb-2" />
+            <Skeleton className="h-6 w-96" />
+          </div>
+          <Skeleton className="h-16 w-full rounded-xl" />
+          <Skeleton className="h-96 w-full rounded-xl" />
+        </div>
+      </DashboardLayout>
+    );
   }
 
   if (!user) {

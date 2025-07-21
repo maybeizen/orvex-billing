@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import DashboardLayout from "@/components/dashboard-layout";
 import { LoadingScreen } from "@/components/ui/loading-spinner";
 import { Button } from "@/components/ui/button";
+import { SkeletonCard, Skeleton } from "@/components/ui/skeleton";
 import { api } from "@/lib/api";
 
 interface DashboardStats {
@@ -87,7 +88,26 @@ export default function DashboardPage() {
   }, [user]);
 
   if (loading) {
-    return <LoadingScreen message="Loading dashboard..." />;
+    return (
+      <DashboardLayout>
+        <div className="space-y-8">
+          <div className="mb-8">
+            <Skeleton className="h-10 w-96 mb-2" fakeDelay={3000} />
+            <Skeleton className="h-6 w-80" fakeDelay={3000} />
+          </div>
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {[1, 2, 3].map((i) => (
+              <Skeleton
+                key={i}
+                className="h-32 w-full rounded-xl"
+                fakeDelay={3000}
+              />
+            ))}
+          </div>
+          <Skeleton className="h-96 w-full rounded-xl" fakeDelay={3000} />
+        </div>
+      </DashboardLayout>
+    );
   }
 
   if (!user) {
@@ -208,13 +228,7 @@ export default function DashboardPage() {
                 {loadingStats ? (
                   <div className="space-y-4">
                     {[1, 2, 3].map((i) => (
-                      <div
-                        key={i}
-                        className="animate-pulse bg-white/5 rounded-lg p-4"
-                      >
-                        <div className="h-4 bg-gray-600 rounded w-1/4 mb-2"></div>
-                        <div className="h-3 bg-gray-600 rounded w-1/2"></div>
-                      </div>
+                      <SkeletonCard key={i} />
                     ))}
                   </div>
                 ) : services.length === 0 ? (
@@ -285,13 +299,7 @@ export default function DashboardPage() {
                 {loadingStats ? (
                   <div className="space-y-4">
                     {[1, 2, 3].map((i) => (
-                      <div
-                        key={i}
-                        className="animate-pulse bg-white/5 rounded-lg p-4"
-                      >
-                        <div className="h-4 bg-gray-600 rounded w-1/4 mb-2"></div>
-                        <div className="h-3 bg-gray-600 rounded w-1/2"></div>
-                      </div>
+                      <SkeletonCard key={i} />
                     ))}
                   </div>
                 ) : invoices.length === 0 ? (

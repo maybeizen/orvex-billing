@@ -43,10 +43,11 @@ export default function UserProfile({
 
   const getAvatarUrl = (avatarUrl?: string) => {
     if (!avatarUrl) return null;
-    if (avatarUrl.startsWith('http')) return avatarUrl;
+    if (avatarUrl.startsWith("http")) return avatarUrl;
     // Construct full URL for avatar - remove /api from base URL and add avatar path
-    const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api";
-    return baseUrl.replace('/api', '') + avatarUrl;
+    const baseUrl =
+      process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api";
+    return baseUrl.replace("/api", "") + avatarUrl;
   };
 
   return (
@@ -74,7 +75,9 @@ export default function UserProfile({
               <p className="text-sm font-medium text-white truncate max-w-[90px]">
                 {getDisplayName()}
               </p>
-              <p className="text-xs text-gray-400 truncate">{user?.email}</p>
+              <p className="text-xs text-gray-400 truncate max-w-[90px]">
+                {user?.email}
+              </p>
             </div>
           </div>
           <i
