@@ -21,12 +21,12 @@ export default class Database {
       const startTime = Date.now();
 
       console.log("Connecting to MongoDB...");
-      await mongoose.connect(this.uri, this.options);
+      await mongoose
+        .connect(this.uri, this.options)
+        .then(() =>
+          console.log(`Connected to MongoDB in ${Date.now() - startTime}ms`)
+        );
       this.connection = mongoose.connection;
-
-      this.connection.once("open", () => {
-        console.log(`Connected to MongoDB in ${Date.now() - startTime}ms`);
-      });
 
       this.connection.on("error", (error) => {
         console.error(`MongoDB connection error: ${error}`);

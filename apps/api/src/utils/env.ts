@@ -30,7 +30,7 @@ const envSchema = z.object({
   AVATAR_UPLOAD_DIR: z.string(),
   CDN_BASE_URL: z.string(),
 
-  PTERO_API_URL: z.string().url(),
+  PTERO_API_URL: z.url(),
   PTERO_API_KEY: z.string(),
 
   STRIPE_SECRET_KEY: z.string(),
