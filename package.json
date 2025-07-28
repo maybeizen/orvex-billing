@@ -1,33 +1,26 @@
 {
-  "name": "billing_backend",
+  "name": "orvex-billing",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "build": "turbo build",
-    "dev": "turbo dev",
-    "lint": "turbo lint",
-    "test": "turbo test",
-    "type-check": "turbo type-check"
+    "dev": "turbo dev"
   },
-  "workspaces": [
-    "apps/api",
-    "apps/frontend"
-  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/maybeizen/orvex-api.git"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
-  "type": "commonjs",
+  "license": "MIT",
+  "type": "module",
   "bugs": {
     "url": "https://github.com/maybeizen/orvex-api/issues"
   },
   "homepage": "https://github.com/maybeizen/orvex-api#readme",
+  "packageManager": "pnpm@10.13.1",
   "dependencies": {
     "turbo": "^2.5.5"
-  },
-  "packageManager": "npm@10.9.0"
+  }
 }

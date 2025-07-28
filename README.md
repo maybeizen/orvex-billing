@@ -5,7 +5,7 @@ A monorepo containing the billing API and frontend for Orvex.
 ## Project Structure
 
 ```
-├── api/          # Go backend API server (Written in Go)
+├── api/          # Express-based Backend
 ├── frontend/     # Next.js frontend application
 ├── turbo.json    # Turbo configuration
 └── package.json  # Root package configuration
@@ -16,7 +16,6 @@ A monorepo containing the billing API and frontend for Orvex.
 ### Prerequisites
 
 - Node.js 18+
-- Go 1.24+
 - npm/yarn/pnpm
 
 ### Installation
@@ -41,7 +40,7 @@ npm run dev
 
 ### API (`/api`)
 
-Go-based backend API server using Fiber framework.
+Express-based backend API server.
 
 ### Frontend (`/frontend`)
 

@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "target": "ES2020", // Modern JS output, async/await supported
+    "module": "ESNext", // Keep ES Modules, works well with bundlers
+    "moduleResolution": "Node", // For Node-style resolution
+    "lib": ["DOM", "DOM.Iterable", "ESNext"], // DOM libs for frontend + modern JS
+    "allowJs": true, // Only TypeScript
+    "jsx": "react-jsx", // React 17+ JSX transform (use "react" if older)
+    "strict": true, // Enable all strict type checks
+    "esModuleInterop": true, // Allows default imports from CommonJS
+    "skipLibCheck": true, // Speed up build by skipping lib checks
+    "forceConsistentCasingInFileNames": true,
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true, // Root config doesn’t emit, each package handles that
+    "baseUrl": "."
+  },
+  "include": ["."],
+  "exclude": ["node_modules", "dist", "build"]
+}

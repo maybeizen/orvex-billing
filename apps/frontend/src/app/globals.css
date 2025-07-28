@@ -12,24 +12,11 @@
     font-family: var(--font-sans);
     scroll-behavior: smooth;
   }
+
   body {
     @apply antialiased bg-black text-white;
-    background-image: radial-gradient(
-        circle at 20% 80%,
-        rgba(120, 119, 198, 0.03) 0%,
-        transparent 50%
-      ),
-      radial-gradient(
-        circle at 80% 20%,
-        rgba(255, 255, 255, 0.01) 0%,
-        transparent 50%
-      ),
-      radial-gradient(
-        circle at 40% 40%,
-        rgba(120, 119, 198, 0.02) 0%,
-        transparent 50%
-      );
   }
+
   h1,
   h2,
   h3,
@@ -86,23 +73,4 @@ textarea:focus {
 ::selection {
   background: rgba(139, 92, 246, 0.3);
   color: white;
-}
-
-/* Custom scrollbar for sidebar */
-.custom-scrollbar::-webkit-scrollbar {
-  width: 4px;
-}
-
-.custom-scrollbar::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0.2);
-  border-radius: 2px;
-}
-
-.custom-scrollbar::-webkit-scrollbar-thumb {
-  background: rgba(139, 92, 246, 0.4);
-  border-radius: 2px;
-}
-
-.custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: rgba(139, 92, 246, 0.7);
 }
