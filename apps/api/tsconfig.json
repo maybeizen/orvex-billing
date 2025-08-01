@@ -15,8 +15,11 @@
     "noFallthroughCasesInSwitch": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "noEmit": true, // Root config doesn’t emit, each package handles that
-    "baseUrl": "."
+    "noEmit": true, // Root config doesn't emit, each package handles that
+    "baseUrl": ".",
+    "paths": {
+      "src/*": ["./src/*"]
+    }
   },
   "include": ["."],
   "exclude": ["node_modules", "dist", "build"]

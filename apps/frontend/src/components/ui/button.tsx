@@ -8,7 +8,8 @@ type ButtonVariant =
   | "success"
   | "danger"
   | "ghost"
-  | "outline";
+  | "outline"
+  | "white";
 type ButtonRounded = "none" | "xs" | "sm" | "md" | "lg" | "xl" | "full";
 type IconPosition = "left" | "right";
 
@@ -57,6 +58,7 @@ export const Button: React.FC<ButtonProps> = ({
     danger: "bg-red-500 hover:bg-red-600 text-white",
     ghost: "bg-transparent hover:bg-violet-700",
     outline: "bg-transparent border border-gray-300 hover:bg-gray-100",
+    white: "bg-white hover:bg-gray-200 text-black",
   };
 
   const roundedClasses = {

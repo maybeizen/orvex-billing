@@ -1,10 +1,8 @@
+import React from "react";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Figtree, Sora } from "next/font/google";
 import "./globals.css";
 import "../../public/fa/css/all.min.css";
-import { AuthProvider } from "@/lib/auth-context";
-import Navbar from "@/components/navbar";
-import Footer from "@/components/footer";
 
 const figtree = Figtree({
   subsets: ["latin"],
@@ -122,9 +120,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className={`${figtree.variable} ${sora.variable} antialiased`}>
-        <AuthProvider>{children}</AuthProvider>
+        {children}
       </body>
     </html>
   );

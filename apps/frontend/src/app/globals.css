@@ -1,6 +1,5 @@
 @import "tailwindcss";
 
-/* Font variables are set by next/font in layout.tsx, so we use them here */
 @theme {
   --font-sans: "Figtree", sans-serif;
   --font-heading: "Sora", sans-serif;
@@ -17,28 +16,10 @@
     @apply antialiased bg-black text-white;
   }
 
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    font-family: var(--font-heading);
-    font-weight: 700;
-    letter-spacing: -0.01em;
-  }
   code,
   pre {
     font-family: var(--font-mono);
   }
-}
-
-.glass-effect {
-  background: rgba(36, 36, 48, 0.4);
-  backdrop-filter: blur(20px) saturate(1.8);
-  border: 1px solid rgba(120, 119, 198, 0.15);
-  box-shadow: 0 8px 32px 0 rgba(80, 80, 120, 0.15),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
 .animate-spin-clean {

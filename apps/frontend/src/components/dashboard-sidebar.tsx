@@ -1,23 +1,9 @@
 "use client";
 
-import { useAuth } from "@/lib/auth-context";
 import { useRouter } from "next/navigation";
-import {
-  Navigation,
-  NavItem,
-  NavGroup,
-  UserProfile,
-} from "./navigation";
+import { Navigation, NavItem, NavGroup, UserProfile } from "./navigation";
 
 export default function DashboardSidebar() {
-  const { user, logout } = useAuth();
-  const router = useRouter();
-
-  const handleLogout = async () => {
-    await logout();
-    router.push("/");
-  };
-
   return (
     <Navigation>
       <div className="flex-1 space-y-4">
@@ -32,13 +18,6 @@ export default function DashboardSidebar() {
             href="/dashboard/services"
             icon="fas fa-server"
           />
-          {user?.role === "admin" && (
-            <NavItem
-              label="Admin Panel"
-              href="/admin"
-              icon="fas fa-crown"
-            />
-          )}
         </div>
 
         <div className="space-y-2">
@@ -99,8 +78,6 @@ export default function DashboardSidebar() {
             icon="fas fa-book-open"
           />
         </div>
-
-        <UserProfile user={user} onLogout={handleLogout} />
       </div>
     </Navigation>
   );
