@@ -1,5 +1,5 @@
-import { Request, Response, NextFunction } from 'express';
-import { ResponseHelper } from '../utils/response';
+import { Request, Response, NextFunction } from "express";
+import { ResponseHelper } from "../utils/response";
 
 export interface CustomError extends Error {
   statusCode?: number;
@@ -12,49 +12,54 @@ export class AppError extends Error {
   public code?: string;
   public details?: any;
 
-  constructor(message: string, statusCode: number = 500, code?: string, details?: any) {
+  constructor(
+    message: string,
+    statusCode: number = 500,
+    code?: string,
+    details?: any
+  ) {
     super(message);
     this.statusCode = statusCode;
     this.code = code;
     this.details = details;
-    this.name = 'AppError';
+    this.name = "AppError";
 
     Error.captureStackTrace(this, this.constructor);
   }
 }
 
 export class ValidationError extends AppError {
-  constructor(message: string = 'Validation failed', details?: any) {
-    super(message, 400, 'VALIDATION_ERROR', details);
-    this.name = 'ValidationError';
+  constructor(message: string = "Validation failed", details?: any) {
+    super(message, 400, "VALIDATION_ERROR", details);
+    this.name = "ValidationError";
   }
 }
 
 export class AuthenticationError extends AppError {
-  constructor(message: string = 'Authentication required') {
-    super(message, 401, 'AUTHENTICATION_ERROR');
-    this.name = 'AuthenticationError';
+  constructor(message: string = "Authentication required") {
+    super(message, 401, "AUTHENTICATION_ERROR");
+    this.name = "AuthenticationError";
   }
 }
 
 export class AuthorizationError extends AppError {
-  constructor(message: string = 'Access denied') {
-    super(message, 403, 'AUTHORIZATION_ERROR');
-    this.name = 'AuthorizationError';
+  constructor(message: string = "Access denied") {
+    super(message, 403, "AUTHORIZATION_ERROR");
+    this.name = "AuthorizationError";
   }
 }
 
 export class NotFoundError extends AppError {
-  constructor(message: string = 'Resource not found') {
-    super(message, 404, 'NOT_FOUND_ERROR');
-    this.name = 'NotFoundError';
+  constructor(message: string = "Resource not found") {
+    super(message, 404, "NOT_FOUND_ERROR");
+    this.name = "NotFoundError";
   }
 }
 
 export class ConflictError extends AppError {
-  constructor(message: string = 'Resource already exists') {
-    super(message, 409, 'CONFLICT_ERROR');
-    this.name = 'ConflictError';
+  constructor(message: string = "Resource already exists") {
+    super(message, 409, "CONFLICT_ERROR");
+    this.name = "ConflictError";
   }
 }
 
@@ -65,46 +70,41 @@ export const errorHandler = (
   next: NextFunction
 ) => {
   let statusCode = error.statusCode || 500;
-  let message = error.message || 'Internal server error';
+  let message = error.message || "Internal server error";
 
-  // Handle Mongoose validation errors
-  if (error.name === 'ValidationError') {
+  if (error.name === "ValidationError") {
     statusCode = 400;
-    message = 'Validation failed';
+    message = "Validation failed";
   }
 
-  // Handle Mongoose duplicate key errors
-  if (error.name === 'MongoServerError' && (error as any).code === 11000) {
+  if (error.name === "MongoServerError" && (error as any).code === 11000) {
     statusCode = 409;
-    message = 'Resource already exists';
+    message = "Resource already exists";
   }
 
-  // Handle JWT errors
-  if (error.name === 'JsonWebTokenError') {
+  if (error.name === "JsonWebTokenError") {
     statusCode = 401;
-    message = 'Invalid token';
+    message = "Invalid token";
   }
 
-  if (error.name === 'TokenExpiredError') {
+  if (error.name === "TokenExpiredError") {
     statusCode = 401;
-    message = 'Token expired';
+    message = "Token expired";
   }
 
-  // Log error in development
-  if (process.env.NODE_ENV === 'development') {
-    console.error('Error:', {
+  if (process.env.NODE_ENV === "development") {
+    console.error("Error:", {
       message: error.message,
       stack: error.stack,
       statusCode,
       code: error.code,
-      details: error.details
+      details: error.details,
     });
   }
 
   return ResponseHelper.error(res, message, statusCode);
 };
 
-// 404 handler for unmatched routes
 export const notFoundHandler = (req: Request, res: Response) => {
   return ResponseHelper.notFound(res, `Route ${req.originalUrl} not found`);
 };

@@ -18,7 +18,8 @@ const userSchema = new Schema<IUserDocument>(
     password: {
       type: String,
       required: true,
-      minlength: 6,
+      minlength: 8,
+      maxlength: 128,
     },
     isEmailVerified: {
       type: Boolean,
@@ -31,6 +32,11 @@ const userSchema = new Schema<IUserDocument>(
     resetPasswordExpires: {
       type: Date,
       default: undefined,
+    },
+    role: {
+      type: String,
+      enum: ["user", "client", "admin"],
+      default: "user",
     },
   },
   {

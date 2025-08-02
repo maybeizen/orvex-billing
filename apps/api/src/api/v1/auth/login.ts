@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { Request, Response } from "express";
 import { User } from "../../../db/models/User";
 import { LoginInput } from "../../../validators/auth";
 import { LoginResponse } from "../../../types/api";
@@ -20,18 +20,25 @@ export const login = async (req: Request, res: Response) => {
       return;
     }
 
-    req.session.userId = user._id.toString();
+    const userId = user._id.toString();
+    req.session.regenerate((err) => {
+      if (err) {
+        console.error("Session regeneration error:", err);
+        return ResponseHelper.error(res, "Internal server error");
+      }
 
-    const userData: LoginResponse = {
-      id: user._id.toString(),
-      email: user.email,
-      isEmailVerified: user.isEmailVerified,
-      createdAt: user.createdAt,
-      updatedAt: user.updatedAt,
-      sessionId: req.sessionID,
-    };
+      req.session.userId = userId;
 
-    ResponseHelper.success(res, userData, "Login successful");
+      const userData: LoginResponse = {
+        id: user._id.toString(),
+        email: user.email,
+        isEmailVerified: user.isEmailVerified,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt,
+      };
+
+      ResponseHelper.success(res, userData, "Login successful");
+    });
   } catch (error) {
     console.error("Login error:", error);
     ResponseHelper.error(res, "Internal server error");

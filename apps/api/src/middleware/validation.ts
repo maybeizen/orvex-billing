@@ -1,6 +1,6 @@
-import { Request, Response, NextFunction } from 'express';
-import { z } from 'zod';
-import { ResponseHelper } from '../utils/response';
+import { Request, Response, NextFunction } from "express";
+import { z, ZodError } from "zod";
+import { ResponseHelper } from "../utils/response";
 
 export const validate = (schema: z.ZodSchema) => {
   return (req: Request, res: Response, next: NextFunction) => {
@@ -9,10 +9,10 @@ export const validate = (schema: z.ZodSchema) => {
       req.body = validatedData;
       next();
     } catch (error) {
-      if (error instanceof z.ZodError) {
-        const errors = error.errors.map(err => ({
-          field: err.path.join('.'),
-          message: err.message
+      if (error instanceof ZodError) {
+        const errors = error.issues.map((err) => ({
+          field: err.path.join("."),
+          message: err.message,
         }));
         return ResponseHelper.validationError(res, errors);
       }

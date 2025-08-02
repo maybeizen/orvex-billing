@@ -2,11 +2,20 @@ import { z } from "zod";
 
 export const registerSchema = z
   .object({
-    email: z.email("Invalid email address").min(1, "Email is required"),
+    email: z
+      .email("Invalid email address")
+      .min(1, "Email is required")
+      .max(254, "Email must be less than 254 characters")
+      .toLowerCase()
+      .trim(),
     password: z
       .string()
-      .min(6, "Password must be at least 6 characters")
-      .max(100, "Password must be less than 100 characters"),
+      .min(8, "Password must be at least 8 characters")
+      .max(128, "Password must be less than 128 characters")
+      .regex(
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
+        "Password must contain at least one lowercase letter, one uppercase letter, and one number"
+      ),
     confirmPassword: z.string().min(1, "Password confirmation is required"),
   })
   .refine((data) => data.password === data.confirmPassword, {
@@ -15,21 +24,41 @@ export const registerSchema = z
   });
 
 export const loginSchema = z.object({
-  email: z.email("Invalid email address").min(1, "Email is required"),
-  password: z.string().min(1, "Password is required"),
+  email: z
+    .email("Invalid email address")
+    .min(1, "Email is required")
+    .max(254, "Email must be less than 254 characters")
+    .toLowerCase()
+    .trim(),
+  password: z
+    .string()
+    .min(1, "Password is required")
+    .max(128, "Password too long"),
 });
 
 export const forgotPasswordSchema = z.object({
-  email: z.email("Invalid email address").min(1, "Email is required"),
+  email: z
+    .email("Invalid email address")
+    .min(1, "Email is required")
+    .max(254, "Email must be less than 254 characters")
+    .toLowerCase()
+    .trim(),
 });
 
 export const resetPasswordSchema = z
   .object({
-    token: z.string().min(1, "Reset token is required"),
+    token: z
+      .string()
+      .min(1, "Reset token is required")
+      .max(256, "Invalid token format"),
     password: z
       .string()
-      .min(6, "Password must be at least 6 characters")
-      .max(100, "Password must be less than 100 characters"),
+      .min(8, "Password must be at least 8 characters")
+      .max(128, "Password must be less than 128 characters")
+      .regex(
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
+        "Password must contain at least one lowercase letter, one uppercase letter, and one number"
+      ),
     confirmPassword: z.string().min(1, "Password confirmation is required"),
   })
   .refine((data) => data.password === data.confirmPassword, {

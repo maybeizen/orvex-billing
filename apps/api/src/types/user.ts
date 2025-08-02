@@ -7,9 +7,10 @@ export interface IUser {
   resetPasswordExpires?: Date;
   createdAt: Date;
   updatedAt: Date;
+  role: string;
 }
 
-declare module 'express-session' {
+declare module "express-session" {
   interface SessionData {
     userId?: string;
   }

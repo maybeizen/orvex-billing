@@ -6,7 +6,6 @@ export interface HealthCheckResponse {
   version: string;
   services: {
     database: ServiceStatus;
-    redis?: ServiceStatus;
     session: ServiceStatus;
   };
   system: {
