@@ -10,13 +10,13 @@ export const login = async (req: Request, res: Response) => {
 
     const user = await User.findOne({ email });
     if (!user) {
-      ResponseHelper.unauthorized(res, "Invalid credentials");
+      ResponseHelper.unauthorized(res, "Invalid email or password");
       return;
     }
 
     const isValidPassword = await user.comparePassword(password);
     if (!isValidPassword) {
-      ResponseHelper.unauthorized(res, "Invalid credentials");
+      ResponseHelper.unauthorized(res, "Invalid email or password");
       return;
     }
 

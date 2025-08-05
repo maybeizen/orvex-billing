@@ -11,9 +11,7 @@
     "type": "git",
     "url": "git+https://github.com/maybeizen/orvex-api.git"
   },
-  "keywords": [
-    
-  ],
+  "keywords": [],
   "author": "",
   "license": "MIT",
   "type": "module",
@@ -27,7 +25,9 @@
   },
   "pnpm": {
     "onlyBuiltDependencies": [
-      "esbuild"
+      "@tailwindcss/oxide",
+      "esbuild",
+      "sharp"
     ]
   }
 }
