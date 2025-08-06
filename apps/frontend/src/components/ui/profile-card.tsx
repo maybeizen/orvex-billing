@@ -91,7 +91,7 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({
 
           {user.role === "admin" && (
             <Link
-              href="/admin"
+              href="/admin/dashboard"
               className="flex items-center gap-2.5 px-3 py-2 text-white/80 hover:bg-white/10 hover:text-white transition-colors duration-150 text-sm"
               onClick={() => setShowMenu(false)}
             >

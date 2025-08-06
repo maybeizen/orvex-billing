@@ -4,6 +4,7 @@ import React, { ReactNode } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ProfileCard } from "./profile-card";
+import Image from "next/image";
 
 export interface SidebarItemProps {
   icon?: string;
@@ -166,12 +167,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
     >
       <div className="flex-shrink-0 p-4 border-b border-white/10">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
-            <i className="fas fa-server text-white text-sm" />
+          <div className="w-10 h-10 rounded-lg flex items-center justify-center">
+            <Image src="/orvex.webp" alt="Orvex" width={40} height={40} />
           </div>
           <div>
             <h2 className="text-white font-semibold text-lg">Orvex</h2>
-            <p className="text-white/40 text-xs">Control Panel</p>
+            <p className="text-white/40 text-xs">orvex.cc</p>
           </div>
         </div>
       </div>
