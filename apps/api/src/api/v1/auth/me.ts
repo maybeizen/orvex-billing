@@ -11,6 +11,7 @@ export const getMe = (req: AuthenticatedRequest, res: Response) => {
       lastName: req.user.lastName,
       username: req.user.username,
       email: req.user.email,
+      role: req.user.role,
       isEmailVerified: req.user.isEmailVerified,
       createdAt: req.user.createdAt,
       updatedAt: req.user.updatedAt,
