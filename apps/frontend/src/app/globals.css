@@ -45,12 +45,6 @@
   background: rgba(139, 92, 246, 0.8);
 }
 
-input:focus,
-textarea:focus {
-  outline: none;
-  box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.3);
-}
-
 ::selection {
   background: rgba(139, 92, 246, 0.3);
   color: white;

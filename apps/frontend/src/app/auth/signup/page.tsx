@@ -108,7 +108,9 @@ export default function SignUp() {
     <>
       <div className="text-center mb-6">
         <h1 className="text-2xl font-bold text-white mb-1">Create account</h1>
-        <p className="text-sm text-white/60">Get started with your free account</p>
+        <p className="text-sm text-white/60">
+          Get started with your free account
+        </p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
@@ -130,10 +132,10 @@ export default function SignUp() {
                 setFirstName(e.target.value);
                 handleFieldChange("firstName", e.target.value);
               }}
-              className={`w-full px-3 py-2 bg-white/5 border rounded-lg text-sm text-white placeholder-white/40 focus:outline-none focus:ring-1 transition-all duration-200 ${
+              className={`w-full px-3 py-2 bg-white/5 border rounded-lg text-sm text-white placeholder-white/40 focus:outline-none focus:ring-2 transition-all duration-200 ${
                 fieldErrors.firstName
                   ? "border-red-500/50 focus:ring-red-500/50 focus:border-red-500/50"
-                  : "border-white/10 focus:ring-blue-500/50 focus:border-blue-500/50"
+                  : "border-white/10 focus:ring-violet-500/80"
               }`}
               autoComplete="given-name"
               required
@@ -161,10 +163,10 @@ export default function SignUp() {
                 setLastName(e.target.value);
                 handleFieldChange("lastName", e.target.value);
               }}
-              className={`w-full px-3 py-2 bg-white/5 border rounded-lg text-sm text-white placeholder-white/40 focus:outline-none focus:ring-1 transition-all duration-200 ${
+              className={`w-full px-3 py-2 bg-white/5 border rounded-lg text-sm text-white placeholder-white/40 focus:outline-none focus:ring-2 transition-all duration-200 ${
                 fieldErrors.lastName
                   ? "border-red-500/50 focus:ring-red-500/50 focus:border-red-500/50"
-                  : "border-white/10 focus:ring-blue-500/50 focus:border-blue-500/50"
+                  : "border-white/10 focus:ring-violet-500/80"
               }`}
               autoComplete="family-name"
               required
@@ -195,10 +197,10 @@ export default function SignUp() {
                 setUsername(e.target.value);
                 handleFieldChange("username", e.target.value);
               }}
-              className={`w-full px-3 py-2 bg-white/5 border rounded-lg text-sm text-white placeholder-white/40 focus:outline-none focus:ring-1 transition-all duration-200 ${
+              className={`w-full px-3 py-2 bg-white/5 border rounded-lg text-sm text-white placeholder-white/40 focus:outline-none focus:ring-2 transition-all duration-200 ${
                 fieldErrors.username
                   ? "border-red-500/50 focus:ring-red-500/50 focus:border-red-500/50"
-                  : "border-white/10 focus:ring-blue-500/50 focus:border-blue-500/50"
+                  : "border-white/10 focus:ring-violet-500/80"
               }`}
               autoComplete="username"
               required
@@ -226,10 +228,10 @@ export default function SignUp() {
                 setEmail(e.target.value);
                 handleFieldChange("email", e.target.value);
               }}
-              className={`w-full px-3 py-2 bg-white/5 border rounded-lg text-sm text-white placeholder-white/40 focus:outline-none focus:ring-1 transition-all duration-200 ${
+              className={`w-full px-3 py-2 bg-white/5 border rounded-lg text-sm text-white placeholder-white/40 focus:outline-none focus:ring-2 transition-all duration-200 ${
                 fieldErrors.email
                   ? "border-red-500/50 focus:ring-red-500/50 focus:border-red-500/50"
-                  : "border-white/10 focus:ring-blue-500/50 focus:border-blue-500/50"
+                  : "border-white/10 focus:ring-violet-500/80"
               }`}
               autoComplete="email"
               required
@@ -260,10 +262,10 @@ export default function SignUp() {
               }}
               onFocus={() => setPasswordFocused(true)}
               onBlur={() => setPasswordFocused(false)}
-              className={`w-full px-3 py-2 pr-10 bg-white/5 border rounded-lg text-sm text-white placeholder-white/40 focus:outline-none focus:ring-1 transition-all duration-200 ${
+              className={`w-full px-3 py-2 pr-10 bg-white/5 border rounded-lg text-sm text-white placeholder-white/40 focus:outline-none focus:ring-2 transition-all duration-200 ${
                 fieldErrors.password
                   ? "border-red-500/50 focus:ring-red-500/50 focus:border-red-500/50"
-                  : "border-white/10 focus:ring-blue-500/50 focus:border-blue-500/50"
+                  : "border-white/10 focus:ring-violet-500/80"
               }`}
               autoComplete="new-password"
               required
@@ -309,10 +311,10 @@ export default function SignUp() {
                 setConfirmPassword(e.target.value);
                 handleFieldChange("confirmPassword", e.target.value);
               }}
-              className={`w-full px-3 py-2 pr-10 bg-white/5 border rounded-lg text-sm text-white placeholder-white/40 focus:outline-none focus:ring-1 transition-all duration-200 ${
+              className={`w-full px-3 py-2 pr-10 bg-white/5 border rounded-lg text-sm text-white placeholder-white/40 focus:outline-none focus:ring-2 transition-all duration-200 ${
                 fieldErrors.confirmPassword
                   ? "border-red-500/50 focus:ring-red-500/50 focus:border-red-500/50"
-                  : "border-white/10 focus:ring-blue-500/50 focus:border-blue-500/50"
+                  : "border-white/10 focus:ring-violet-500/80"
               }`}
               autoComplete="new-password"
               required

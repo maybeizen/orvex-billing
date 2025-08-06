@@ -108,10 +108,10 @@ export default function Login() {
               setEmail(e.target.value);
               handleFieldChange("email", e.target.value);
             }}
-            className={`w-full px-3 py-2 bg-white/5 border rounded-lg text-sm text-white placeholder-white/40 focus:outline-none focus:ring-1 transition-all duration-200 ${
+            className={`w-full px-3 py-2 bg-white/5 border rounded-lg text-sm text-white placeholder-white/40 focus:outline-none focus:ring-2 transition-all duration-200 ${
               fieldErrors.email
                 ? "border-red-500/50 focus:ring-red-500/50 focus:border-red-500/50"
-                : "border-white/10 focus:ring-blue-500/50 focus:border-blue-500/50"
+                : "border-white/10 focus:ring-violet-500/80"
             }`}
             autoComplete="email"
             required
@@ -147,10 +147,10 @@ export default function Login() {
                 setPassword(e.target.value);
                 handleFieldChange("password", e.target.value);
               }}
-              className={`w-full px-3 py-2 pr-10 bg-white/5 border rounded-lg text-sm text-white placeholder-white/40 focus:outline-none focus:ring-1 transition-all duration-200 ${
+              className={`w-full px-3 py-2 pr-10 bg-white/5 border rounded-lg text-sm text-white placeholder-white/40 focus:outline-none focus:ring-2 transition-all duration-200 ${
                 fieldErrors.password
                   ? "border-red-500/50 focus:ring-red-500/50 focus:border-red-500/50"
-                  : "border-white/10 focus:ring-blue-500/50 focus:border-blue-500/50"
+                  : "border-white/10 focus:ring-violet-500/80"
               }`}
               autoComplete="current-password"
               required
