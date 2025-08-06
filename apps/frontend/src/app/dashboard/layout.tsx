@@ -14,7 +14,7 @@ export default function DashboardLayout({
     <AuthProvider>
       <ProtectedPage>
         <div className="bg-neutral-950 min-h-screen">
-          <Sidebar width="md">
+          <Sidebar width="md" title="Orvex" subtitle="Client Dashboard">
             <SidebarItem
               icon="fas fa-home"
               label="Dashboard"

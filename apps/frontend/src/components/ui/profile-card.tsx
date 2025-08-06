@@ -3,6 +3,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useAuth } from "@/contexts/auth-context";
 
 export interface ProfileCardProps {
@@ -16,7 +17,9 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({
 }) => {
   const { user, isAuthenticated, logout } = useAuth();
   const [showMenu, setShowMenu] = useState(false);
+  const [isInAdmin, setIsInAdmin] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+  const pathname = usePathname();
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -29,6 +32,11 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  useEffect(() => {
+    setShowMenu(false);
+    setIsInAdmin(pathname.startsWith("/admin"));
+  }, [pathname]);
+
   if (!isAuthenticated || !user) {
     return null;
   }
@@ -39,7 +47,7 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({
     <div className={`relative ${className}`} ref={menuRef}>
       <div
         className="bg-white/5 border border-white/10 rounded-lg p-2.5 cursor-pointer hover:bg-white/8 transition-all duration-200"
-        onClick={() => setShowMenu(!showMenu)}
+        onClick={() => setShowMenu((prev) => !prev)}
       >
         <div className="flex items-center gap-3">
           <div className="flex-shrink-0">
@@ -65,9 +73,7 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({
           </div>
 
           <div className="flex items-center justify-between mr-1">
-            <i
-              className={`fas fa-ellipsis-vertical text-white/40 text-lg transition-transform duration-200`}
-            />
+            <i className="fas fa-ellipsis-vertical text-white/40 text-lg transition-transform duration-200" />
           </div>
         </div>
       </div>
@@ -83,7 +89,6 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({
           <Link
             href="/dashboard/account"
             className="flex items-center gap-2.5 px-3 py-2 text-white/80 hover:bg-white/10 hover:text-white transition-colors duration-150 text-sm"
-            onClick={() => setShowMenu(false)}
           >
             <i className="fas fa-user-circle w-3.5 text-center" />
             <span>Account Settings</span>
@@ -91,12 +96,15 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({
 
           {user.role === "admin" && (
             <Link
-              href="/admin/dashboard"
+              href={isInAdmin ? "/dashboard" : "/admin/dashboard"}
               className="flex items-center gap-2.5 px-3 py-2 text-white/80 hover:bg-white/10 hover:text-white transition-colors duration-150 text-sm"
-              onClick={() => setShowMenu(false)}
             >
-              <i className="fas fa-crown w-3.5 text-center" />
-              <span>Admin Panel</span>
+              <i
+                className={`fas ${
+                  isInAdmin ? "fa-arrow-left" : "fa-crown"
+                } w-3.5 text-center`}
+              />
+              <span>{isInAdmin ? "Exit Admin" : "Admin Panel"}</span>
             </Link>
           )}
 

@@ -27,6 +27,8 @@ export interface SidebarCategoryProps {
 
 export interface SidebarProps {
   children: ReactNode;
+  title: string;
+  subtitle: string;
   className?: string;
   width?: "sm" | "md" | "lg";
   showProfile?: boolean;
@@ -146,6 +148,8 @@ export const SidebarCategory: React.FC<SidebarCategoryProps> = ({
 
 export const Sidebar: React.FC<SidebarProps> = ({
   children,
+  title,
+  subtitle,
   className = "",
   width = "md",
   showProfile = true,
@@ -171,8 +175,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
             <Image src="/orvex.webp" alt="Orvex" width={40} height={40} />
           </div>
           <div>
-            <h2 className="text-white font-semibold text-lg">Orvex</h2>
-            <p className="text-white/40 text-xs">orvex.cc</p>
+            <h2 className="text-white font-semibold text-lg">{title}</h2>
+            <p className="text-white/40 text-xs">{subtitle}</p>
           </div>
         </div>
       </div>
