@@ -31,3 +31,15 @@ export const requireGuest = (req: Request, res: Response, next: NextFunction) =>
   }
   next();
 };
+
+export const requireAdmin = (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+  if (!req.user) {
+    return ResponseHelper.unauthorized(res, 'Authentication required');
+  }
+  
+  if (req.user.role !== 'admin') {
+    return ResponseHelper.forbidden(res, 'Admin access required');
+  }
+  
+  next();
+};
