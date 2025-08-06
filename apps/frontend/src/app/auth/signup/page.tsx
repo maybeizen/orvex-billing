@@ -106,17 +106,17 @@ export default function SignUp() {
 
   return (
     <>
-      <div className="text-center mb-8">
-        <h1 className="text-3xl font-bold text-white mb-2">Create account</h1>
-        <p className="text-white/60">Get started with your free account</p>
+      <div className="text-center mb-6">
+        <h1 className="text-2xl font-bold text-white mb-1">Create account</h1>
+        <p className="text-sm text-white/60">Get started with your free account</p>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-6">
-        <div className="grid grid-cols-2 gap-4">
-          <div className="space-y-2">
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div className="grid grid-cols-2 gap-3">
+          <div className="space-y-1">
             <label
               htmlFor="firstName"
-              className="block text-sm font-medium text-white/80"
+              className="block text-xs font-medium text-white/80"
             >
               First name
             </label>
@@ -130,7 +130,7 @@ export default function SignUp() {
                 setFirstName(e.target.value);
                 handleFieldChange("firstName", e.target.value);
               }}
-              className={`w-full px-4 py-3 bg-white/5 border rounded-lg text-white placeholder-white/40 focus:outline-none focus:ring-2 transition-all duration-200 ${
+              className={`w-full px-3 py-2 bg-white/5 border rounded-lg text-sm text-white placeholder-white/40 focus:outline-none focus:ring-1 transition-all duration-200 ${
                 fieldErrors.firstName
                   ? "border-red-500/50 focus:ring-red-500/50 focus:border-red-500/50"
                   : "border-white/10 focus:ring-blue-500/50 focus:border-blue-500/50"
@@ -139,15 +139,15 @@ export default function SignUp() {
               required
             />
             {fieldErrors.firstName && (
-              <p className="text-red-400 text-sm mt-1">
+              <p className="text-red-400 text-xs mt-1">
                 {fieldErrors.firstName}
               </p>
             )}
           </div>
-          <div className="space-y-2">
+          <div className="space-y-1">
             <label
               htmlFor="lastName"
-              className="block text-sm font-medium text-white/80"
+              className="block text-xs font-medium text-white/80"
             >
               Last name
             </label>
@@ -161,7 +161,7 @@ export default function SignUp() {
                 setLastName(e.target.value);
                 handleFieldChange("lastName", e.target.value);
               }}
-              className={`w-full px-4 py-3 bg-white/5 border rounded-lg text-white placeholder-white/40 focus:outline-none focus:ring-2 transition-all duration-200 ${
+              className={`w-full px-3 py-2 bg-white/5 border rounded-lg text-sm text-white placeholder-white/40 focus:outline-none focus:ring-1 transition-all duration-200 ${
                 fieldErrors.lastName
                   ? "border-red-500/50 focus:ring-red-500/50 focus:border-red-500/50"
                   : "border-white/10 focus:ring-blue-500/50 focus:border-blue-500/50"
@@ -170,18 +170,18 @@ export default function SignUp() {
               required
             />
             {fieldErrors.lastName && (
-              <p className="text-red-400 text-sm mt-1">
+              <p className="text-red-400 text-xs mt-1">
                 {fieldErrors.lastName}
               </p>
             )}
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-4">
-          <div className="space-y-2">
+        <div className="grid grid-cols-2 gap-3">
+          <div className="space-y-1">
             <label
               htmlFor="username"
-              className="block text-sm font-medium text-white/80"
+              className="block text-xs font-medium text-white/80"
             >
               Username
             </label>
@@ -195,7 +195,7 @@ export default function SignUp() {
                 setUsername(e.target.value);
                 handleFieldChange("username", e.target.value);
               }}
-              className={`w-full px-4 py-3 bg-white/5 border rounded-lg text-white placeholder-white/40 focus:outline-none focus:ring-2 transition-all duration-200 ${
+              className={`w-full px-3 py-2 bg-white/5 border rounded-lg text-sm text-white placeholder-white/40 focus:outline-none focus:ring-1 transition-all duration-200 ${
                 fieldErrors.username
                   ? "border-red-500/50 focus:ring-red-500/50 focus:border-red-500/50"
                   : "border-white/10 focus:ring-blue-500/50 focus:border-blue-500/50"
@@ -204,15 +204,15 @@ export default function SignUp() {
               required
             />
             {fieldErrors.username && (
-              <p className="text-red-400 text-sm mt-1">
+              <p className="text-red-400 text-xs mt-1">
                 {fieldErrors.username}
               </p>
             )}
           </div>
-          <div className="space-y-2">
+          <div className="space-y-1">
             <label
               htmlFor="email"
-              className="block text-sm font-medium text-white/80"
+              className="block text-xs font-medium text-white/80"
             >
               Email address
             </label>
@@ -226,7 +226,7 @@ export default function SignUp() {
                 setEmail(e.target.value);
                 handleFieldChange("email", e.target.value);
               }}
-              className={`w-full px-4 py-3 bg-white/5 border rounded-lg text-white placeholder-white/40 focus:outline-none focus:ring-2 transition-all duration-200 ${
+              className={`w-full px-3 py-2 bg-white/5 border rounded-lg text-sm text-white placeholder-white/40 focus:outline-none focus:ring-1 transition-all duration-200 ${
                 fieldErrors.email
                   ? "border-red-500/50 focus:ring-red-500/50 focus:border-red-500/50"
                   : "border-white/10 focus:ring-blue-500/50 focus:border-blue-500/50"
@@ -235,7 +235,7 @@ export default function SignUp() {
               required
             />
             {fieldErrors.email && (
-              <p className="text-red-400 text-sm mt-1">{fieldErrors.email}</p>
+              <p className="text-red-400 text-xs mt-1">{fieldErrors.email}</p>
             )}
           </div>
         </div>
@@ -260,7 +260,7 @@ export default function SignUp() {
               }}
               onFocus={() => setPasswordFocused(true)}
               onBlur={() => setPasswordFocused(false)}
-              className={`w-full px-4 py-3 pr-12 bg-white/5 border rounded-lg text-white placeholder-white/40 focus:outline-none focus:ring-2 transition-all duration-200 ${
+              className={`w-full px-3 py-2 pr-10 bg-white/5 border rounded-lg text-sm text-white placeholder-white/40 focus:outline-none focus:ring-1 transition-all duration-200 ${
                 fieldErrors.password
                   ? "border-red-500/50 focus:ring-red-500/50 focus:border-red-500/50"
                   : "border-white/10 focus:ring-blue-500/50 focus:border-blue-500/50"
@@ -271,13 +271,13 @@ export default function SignUp() {
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-white/40 hover:text-white/60 transition-colors"
+              className="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-white/40 hover:text-white/60 transition-colors"
               aria-label={showPassword ? "Hide password" : "Show password"}
             >
               <i
                 className={`fas ${
                   showPassword ? "fa-eye-slash" : "fa-eye"
-                } text-lg`}
+                } text-sm`}
               />
             </button>
           </div>
@@ -309,7 +309,7 @@ export default function SignUp() {
                 setConfirmPassword(e.target.value);
                 handleFieldChange("confirmPassword", e.target.value);
               }}
-              className={`w-full px-4 py-3 pr-12 bg-white/5 border rounded-lg text-white placeholder-white/40 focus:outline-none focus:ring-2 transition-all duration-200 ${
+              className={`w-full px-3 py-2 pr-10 bg-white/5 border rounded-lg text-sm text-white placeholder-white/40 focus:outline-none focus:ring-1 transition-all duration-200 ${
                 fieldErrors.confirmPassword
                   ? "border-red-500/50 focus:ring-red-500/50 focus:border-red-500/50"
                   : "border-white/10 focus:ring-blue-500/50 focus:border-blue-500/50"
@@ -320,7 +320,7 @@ export default function SignUp() {
             <button
               type="button"
               onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-white/40 hover:text-white/60 transition-colors"
+              className="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-white/40 hover:text-white/60 transition-colors"
               aria-label={
                 showConfirmPassword ? "Hide password" : "Show password"
               }
@@ -328,7 +328,7 @@ export default function SignUp() {
               <i
                 className={`fas ${
                   showConfirmPassword ? "fa-eye-slash" : "fa-eye"
-                } text-lg`}
+                } text-sm`}
               />
             </button>
           </div>
@@ -344,19 +344,19 @@ export default function SignUp() {
           type="submit"
           loading={loading}
           fullWidth
-          size="lg"
-          className="mt-8"
+          size="md"
+          className="mt-6"
         >
           {loading ? "Creating account..." : "Create account"}
         </Button>
       </form>
 
-      <div className="mt-8">
-        <div className="relative flex justify-center text-sm">
+      <div className="mt-6">
+        <div className="relative flex justify-center text-xs">
           <span className="px-4 text-white/50">Or continue with</span>
         </div>
 
-        <div className="mt-6 grid grid-cols-2 gap-3">
+        <div className="mt-4 grid grid-cols-2 gap-3">
           <Button
             variant="glass"
             icon="fab fa-google"
@@ -378,8 +378,8 @@ export default function SignUp() {
         </div>
       </div>
 
-      <div className="mt-8 text-center">
-        <p className="text-sm text-white/60">
+      <div className="mt-6 text-center">
+        <p className="text-xs text-white/60">
           Already have an account?{" "}
           <a
             href="/auth/login"

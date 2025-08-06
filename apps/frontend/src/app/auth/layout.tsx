@@ -51,14 +51,12 @@ export default function AuthLayout({ children }: AuthLayoutProps) {
           <div className="mb-10">
             <h1 className="text-4xl md:text-5xl font-extrabold mb-4 leading-tight">
               <span className="block text-white">Minecraft Hosting</span>
-              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400">
-                Done Right.
-              </span>
+              <span className="block text-violet-400">Done Right.</span>
             </h1>
             <p className="text-lg md:text-xl text-gray-300 mb-8 max-w-xl leading-snug">
               <span className="text-white font-bold">$2.80/GB</span> Minecraft
               servers. Deploy in under{" "}
-              <span className="font-semibold text-blue-300">5 minutes</span>.
+              <span className="font-semibold text-green-200">5 minutes</span>.
               Experience the difference.
             </p>
           </div>
@@ -87,7 +85,7 @@ export default function AuthLayout({ children }: AuthLayoutProps) {
           <div className="text-center">
             <Link
               href="/"
-              className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-semibold rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-violet-500 hover:bg-violet-600 text-white font-semibold rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl"
             >
               <span>Learn More</span>
               <i className="fas fa-arrow-right text-sm"></i>

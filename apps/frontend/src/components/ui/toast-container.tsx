@@ -32,7 +32,7 @@ export const ToastContainer: React.FC<ToastContainerProps> = ({
     return acc;
   }, {} as Record<ToastPosition, typeof notifications>);
 
-  if (typeof window === "undefined" || notifications.length === 0) {
+  if (notifications.length === 0) {
     return null;
   }
 
