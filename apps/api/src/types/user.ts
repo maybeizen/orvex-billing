@@ -1,5 +1,9 @@
 export interface IUser {
   _id: string;
+  uuid: string;
+  firstName: string;
+  lastName: string;
+  username: string;
   email: string;
   password: string;
   isEmailVerified: boolean;

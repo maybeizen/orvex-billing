@@ -6,15 +6,15 @@ import { ResponseHelper } from "../../../utils/response";
 
 export const register = async (req: Request, res: Response) => {
   try {
-    const { email, password } = req.body;
+    const { firstName, lastName, username, email, password } = req.body;
 
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
+    const existingUserByEmail = await User.findOne({ email });
+    if (existingUserByEmail) {
       ResponseHelper.conflict(res, "User already exists with this email");
       return;
     }
 
-    const user = new User({ email, password });
+    const user = new User({ firstName, lastName, username, email, password });
     await user.save();
 
     const userId = user._id.toString();
@@ -28,6 +28,10 @@ export const register = async (req: Request, res: Response) => {
 
       const userData: AuthUserResponse = {
         id: user._id.toString(),
+        uuid: user.uuid,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        username: user.username,
         email: user.email,
         isEmailVerified: user.isEmailVerified,
         createdAt: user.createdAt,

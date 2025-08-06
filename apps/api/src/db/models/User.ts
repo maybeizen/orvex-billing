@@ -1,5 +1,6 @@
 import mongoose, { Document, Schema } from "mongoose";
 import bcrypt from "bcryptjs";
+import { v4 as uuidv4 } from "uuid";
 import { IUser } from "../../types/user";
 
 export interface IUserDocument extends Omit<IUser, "_id">, Document {
@@ -9,6 +10,32 @@ export interface IUserDocument extends Omit<IUser, "_id">, Document {
 
 const userSchema = new Schema<IUserDocument>(
   {
+    uuid: {
+      type: String,
+      required: true,
+      default: uuidv4,
+    },
+    firstName: {
+      type: String,
+      required: true,
+      trim: true,
+      maxlength: 50,
+    },
+    lastName: {
+      type: String,
+      required: true,
+      trim: true,
+      maxlength: 50,
+    },
+    username: {
+      type: String,
+      required: true,
+      trim: true,
+      lowercase: true,
+      minlength: 3,
+      maxlength: 30,
+      match: /^[a-zA-Z0-9_-]+$/,
+    },
     email: {
       type: String,
       required: true,
@@ -63,6 +90,7 @@ userSchema.methods.comparePassword = async function (
 };
 
 userSchema.index({ email: 1 }, { unique: true });
+userSchema.index({ uuid: 1 }, { unique: true });
 userSchema.index({ resetPasswordToken: 1 });
 
 export const User = mongoose.model<IUserDocument>("User", userSchema);

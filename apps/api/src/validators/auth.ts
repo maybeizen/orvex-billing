@@ -2,6 +2,26 @@ import { z } from "zod";
 
 export const registerSchema = z
   .object({
+    firstName: z
+      .string()
+      .min(1, "First name is required")
+      .max(50, "First name must be less than 50 characters")
+      .trim(),
+    lastName: z
+      .string()
+      .min(1, "Last name is required")
+      .max(50, "Last name must be less than 50 characters")
+      .trim(),
+    username: z
+      .string()
+      .min(3, "Username must be at least 3 characters")
+      .max(30, "Username must be less than 30 characters")
+      .regex(
+        /^[a-zA-Z0-9_-]+$/,
+        "Username can only contain letters, numbers, underscores, and hyphens"
+      )
+      .toLowerCase()
+      .trim(),
     email: z
       .email("Invalid email address")
       .min(1, "Email is required")

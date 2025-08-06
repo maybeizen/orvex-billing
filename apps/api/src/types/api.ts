@@ -46,6 +46,10 @@ export type TypedResponse<T = any> = Response<ApiResponse<T>>;
 
 export interface AuthUserResponse {
   id: string;
+  uuid: string;
+  firstName: string;
+  lastName: string;
+  username: string;
   email: string;
   isEmailVerified: boolean;
   createdAt: Date;
@@ -56,9 +60,8 @@ export interface LoginResponse extends AuthUserResponse {
   sessionId?: string;
 }
 
-// Health Check Types
 export interface HealthCheckResponse {
-  status: 'ok' | 'error';
+  status: "ok" | "error";
   timestamp: string;
   uptime: number;
   environment: string;
@@ -81,7 +84,7 @@ export interface HealthCheckResponse {
 }
 
 export interface ServiceStatus {
-  status: 'healthy' | 'unhealthy' | 'degraded';
+  status: "healthy" | "unhealthy" | "degraded";
   responseTime?: number;
   message?: string;
   lastChecked: string;

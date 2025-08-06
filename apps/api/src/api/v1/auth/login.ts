@@ -31,6 +31,10 @@ export const login = async (req: Request, res: Response) => {
 
       const userData: LoginResponse = {
         id: user._id.toString(),
+        uuid: user.uuid,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        username: user.username,
         email: user.email,
         isEmailVerified: user.isEmailVerified,
         createdAt: user.createdAt,
