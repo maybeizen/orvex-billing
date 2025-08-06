@@ -2,8 +2,10 @@
 
 import axios from "axios";
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { useNotifications } from "@/contexts/notification-context";
+import { useAuth } from "@/contexts/auth-context";
 import {
   validateRegistrationForm,
   useFormValidation,
@@ -35,6 +37,8 @@ export default function SignUp() {
   const [passwordFocused, setPasswordFocused] = useState(false);
   const { success, error } = useNotifications();
   const { validateField } = useFormValidation();
+  const { register } = useAuth();
+  const router = useRouter();
 
   const handleFieldChange = (fieldName: string, value: string) => {
     if (fieldErrors[fieldName]) {
@@ -71,35 +75,36 @@ export default function SignUp() {
       setFieldErrors({});
       setLoading(true);
 
-      const res = await axios.post(
-        "http://localhost:3001/api/v1/auth/register",
-        { firstName, lastName, username, email, password, confirmPassword },
-        { withCredentials: true }
-      );
+      await register({
+        firstName,
+        lastName,
+        username,
+        email,
+        password,
+      });
 
       setLoading(false);
       success("Account created successfully!", {
         title: "Welcome to Orvex!",
         duration: 6000,
       });
-      console.log(`Registered successfully! ${res.data}`);
+      router.push('/dashboard');
     } catch (err: any) {
       console.error(err);
-      const errorData: ErrorResponse = err.response?.data;
-
-      if (errorData?.errors && errorData.errors.length > 0) {
-        errorData.errors.forEach((fieldError) => {
-          error(`${fieldError.field}: ${fieldError.message}`, {
-            title: "Validation Error",
-            duration: 6000,
-          });
-        });
-      } else {
-        error(errorData?.message || "Something went wrong", {
-          title: "Registration Failed",
-          duration: 6000,
-        });
+      
+      // Handle different error formats
+      let errorMessage = "Something went wrong";
+      
+      if (err.message) {
+        errorMessage = err.message;
+      } else if (err.response?.data?.message) {
+        errorMessage = err.response.data.message;
       }
+      
+      error(errorMessage, {
+        title: "Registration Failed",
+        duration: 6000,
+      });
       setLoading(false);
     }
   };

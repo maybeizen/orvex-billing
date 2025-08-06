@@ -2,8 +2,10 @@
 
 import axios from "axios";
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { useNotifications } from "@/contexts/notification-context";
+import { useAuth } from "@/contexts/auth-context";
 import { validateLoginForm, useFormValidation } from "@/utils/validation";
 
 interface ErrorField {
@@ -25,6 +27,8 @@ export default function Login() {
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const { success, error } = useNotifications();
   const { validateField } = useFormValidation();
+  const { login } = useAuth();
+  const router = useRouter();
 
   const handleFieldChange = (fieldName: string, value: string) => {
     if (fieldErrors[fieldName]) {
@@ -53,32 +57,26 @@ export default function Login() {
       setFieldErrors({});
       setLoading(true);
 
-      const res = await axios.post(
-        "http://localhost:3001/api/v1/auth/login",
-        { email, password },
-        { withCredentials: true }
-      );
+      await login(email, password);
 
       setLoading(false);
       success("Successfully signed in!", { title: "Welcome back!" });
-      console.log(`Signed in! ${res.data}`);
+      router.push("/dashboard");
     } catch (err: any) {
       console.error(err);
-      const errorData: ErrorResponse = err.response?.data;
 
-      if (errorData?.errors && errorData.errors.length > 0) {
-        errorData.errors.forEach((fieldError) => {
-          error(`${fieldError.field}: ${fieldError.message}`, {
-            title: "Validation Error",
-            duration: 6000,
-          });
-        });
-      } else {
-        error(errorData?.message || "Something went wrong", {
-          title: "Sign In Failed",
-          duration: 6000,
-        });
+      let errorMessage = "Something went wrong";
+
+      if (err.message) {
+        errorMessage = err.message;
+      } else if (err.response?.data?.message) {
+        errorMessage = err.response.data.message;
       }
+
+      error(errorMessage, {
+        title: "Sign In Failed",
+        duration: 6000,
+      });
       setLoading(false);
     }
   };

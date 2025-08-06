@@ -1,15 +1,36 @@
 "use client";
 
-import { ReactNode } from "react";
+import { ReactNode, useEffect } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { useAuth, AuthProvider } from "@/contexts/auth-context";
 
 interface AuthLayoutProps {
   children: ReactNode;
 }
 
-export default function AuthLayout({ children }: AuthLayoutProps) {
+function AuthLayoutInner({ children }: AuthLayoutProps) {
   const pathname = usePathname();
+  const router = useRouter();
+  const { isAuthenticated, isLoading } = useAuth();
+
+  useEffect(() => {
+    if (!isLoading && isAuthenticated) {
+      router.replace('/dashboard');
+    }
+  }, [isAuthenticated, isLoading, router]);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-black">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white"></div>
+      </div>
+    );
+  }
+
+  if (isAuthenticated) {
+    return null;
+  }
 
   const features = [
     {
@@ -102,5 +123,13 @@ export default function AuthLayout({ children }: AuthLayoutProps) {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function AuthLayout({ children }: AuthLayoutProps) {
+  return (
+    <AuthProvider>
+      <AuthLayoutInner>{children}</AuthLayoutInner>
+    </AuthProvider>
   );
 }
