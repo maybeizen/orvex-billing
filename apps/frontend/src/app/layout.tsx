@@ -3,6 +3,8 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono, Figtree, Sora } from "next/font/google";
 import "./globals.css";
 import "../../public/fa/css/all.min.css";
+import { NotificationProvider } from "@/contexts/notification-context";
+import { ToastContainer } from "@/components/ui/toast-container";
 
 const figtree = Figtree({
   subsets: ["latin"],
@@ -122,7 +124,10 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${figtree.variable} ${sora.variable} antialiased`}>
-        {children}
+        <NotificationProvider>
+          {children}
+          <ToastContainer position="bottom-right" />
+        </NotificationProvider>
       </body>
     </html>
   );
